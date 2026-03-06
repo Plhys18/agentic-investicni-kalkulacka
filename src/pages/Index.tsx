@@ -3,6 +3,7 @@ import Header from '@/components/layout/Header';
 import TabBar from '@/components/layout/TabBar';
 import MortgageCalculator from '@/components/calculators/MortgageCalculator';
 import ETFCalculator from '@/components/calculators/ETFCalculator';
+import DCACalculator from '@/components/calculators/DCACalculator';
 import ComparisonView from '@/components/calculators/ComparisonView';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { CurrencyProvider } from '@/hooks/useCurrency';

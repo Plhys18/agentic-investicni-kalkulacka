@@ -1,9 +1,10 @@
 import React from 'react';
-import { Home, TrendingUp, BarChart3 } from 'lucide-react';
+import { Home, TrendingUp, BarChart3, Coins } from 'lucide-react';
 
 const tabs = [
   { label: 'Hypotéka', icon: Home },
   { label: 'ETF Kalkulačka', icon: TrendingUp },
+  { label: 'DCA Aktiva', icon: Coins },
   { label: 'Porovnání', icon: BarChart3 },
 ];
 
