@@ -163,8 +163,8 @@ const TaxImpactCalculator: React.FC = () => {
           <div className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} barCategoryGap="20%">
-                <XAxis dataKey="name" tick={{ fontSize: 13, fontWeight: 600 }} />
-                <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
+                <XAxis dataKey="name" tick={{ fontSize: 13, fontWeight: 600, fill: 'hsl(var(--foreground))' }} />
+                <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
                 <Tooltip
                   formatter={(value: number) => fc(value)}
                   contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }}
