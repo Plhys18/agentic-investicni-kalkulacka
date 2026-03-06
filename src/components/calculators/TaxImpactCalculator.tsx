@@ -100,7 +100,7 @@ const TaxImpactCalculator: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={100000} max={50000000} step={100000} unit={currency} />
+          <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={0} max={500000000} step={100000} unit={currency} />
           <SliderInput label={t('tax.investmentYears')} value={investmentYears} onChange={(v) => setTax({ investmentYears: v })} min={1} max={30} step={1} unit={t('common.years')} />
         </div>
 

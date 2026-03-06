@@ -113,8 +113,8 @@ const DCACalculator: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <SliderInput label={t('dca.initialInvestment')} value={initialInvestment} onChange={(v) => setDCA({ initialInvestment: v })} min={0} max={10000000} step={10000} unit={currency} />
-          <SliderInput label={t('dca.monthlyDCA')} value={monthlyInvestment} onChange={(v) => setDCA({ monthlyInvestment: v })} min={500} max={200000} step={500} unit={currency} />
+          <SliderInput label={t('dca.initialInvestment')} value={initialInvestment} onChange={(v) => setDCA({ initialInvestment: v })} min={0} max={500000000} step={10000} unit={currency} />
+          <SliderInput label={t('dca.monthlyDCA')} value={monthlyInvestment} onChange={(v) => setDCA({ monthlyInvestment: v })} min={0} max={50000000} step={500} unit={currency} />
           <SliderInput label={t('dca.horizon')} value={years} onChange={(v) => setDCA({ years: v })} min={1} max={30} step={1} unit={t('common.years')} />
         </div>
 

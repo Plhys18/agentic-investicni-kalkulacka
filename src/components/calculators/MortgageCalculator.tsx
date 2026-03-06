@@ -78,7 +78,7 @@ const MortgageCalculator: React.FC = () => {
       <div className="calculator-card space-y-5">
         <p className="section-title mb-4">{t('mortgage.params')}</p>
         <div className="space-y-4">
-          <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={500000} max={30000000} step={100000} unit={currency} />
+          <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={0} max={500000000} step={100000} unit={currency} />
           <SliderInput label={t('mortgage.downPayment')} value={downPayment} onChange={(v) => setMortgage({ downPayment: Math.min(v, propertyPrice) })} min={0} max={propertyPrice} step={50000} unit={currency} />
         </div>
 
@@ -101,8 +101,8 @@ const MortgageCalculator: React.FC = () => {
         <div className="border-t border-border/50 pt-4">
           <p className="section-title mb-4">{t('mortgage.incomeExpenses')}</p>
           <div className="space-y-4">
-            <InputField label={t('mortgage.monthlyRent')} value={monthlyRent} onChange={(v) => setMortgage({ monthlyRent: v })} min={0} max={500000} step={500} unit={currency} />
-            <InputField label={t('mortgage.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setMortgage({ monthlyExpenses: v })} min={0} max={200000} step={500} unit={currency} />
+            <InputField label={t('mortgage.monthlyRent')} value={monthlyRent} onChange={(v) => setMortgage({ monthlyRent: v })} min={0} max={50000000} step={500} unit={currency} />
+            <InputField label={t('mortgage.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setMortgage({ monthlyExpenses: v })} min={0} max={50000000} step={500} unit={currency} />
             <SliderInput label={t('mortgage.appreciation')} value={annualAppreciation} onChange={(v) => setMortgage({ annualAppreciation: v })} min={-5} max={15} step={0.1} unit="%" />
             <SliderInput label={t('mortgage.vacancy')} value={vacancyRate} onChange={(v) => setMortgage({ vacancyRate: v })} min={0} max={50} step={1} unit="%" />
           </div>
