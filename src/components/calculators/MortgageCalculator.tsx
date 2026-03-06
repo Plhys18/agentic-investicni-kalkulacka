@@ -7,6 +7,7 @@ import { MORTGAGE_DEFAULTS } from '@/lib/constants';
 import { calculateMortgagePayment } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const MortgageCalculator: React.FC = () => {
   const [propertyPrice, setPropertyPrice] = useState(MORTGAGE_DEFAULTS.propertyPrice);
@@ -18,7 +19,6 @@ const MortgageCalculator: React.FC = () => {
   const [annualAppreciation, setAnnualAppreciation] = useState(MORTGAGE_DEFAULTS.annualAppreciation);
   const [vacancyRate, setVacancyRate] = useState(MORTGAGE_DEFAULTS.vacancyRate);
   const [showTable, setShowTable] = useState(false);
-
   const printRef = useRef<HTMLDivElement>(null);
 
   const loanAmount = Math.max(0, propertyPrice - downPayment);
@@ -35,12 +35,10 @@ const MortgageCalculator: React.FC = () => {
 
   const chartData = useMemo(() => {
     const data: { rok: number; jistina: number; urok: number; zustatek: number }[] = [];
-    let cumPrincipal = 0;
-    let cumInterest = 0;
+    let cumPrincipal = 0, cumInterest = 0;
     for (let year = 1; year <= loanTerm; year++) {
       const monthEnd = Math.min(year * 12, result.amortizationSchedule.length);
-      const monthStart = (year - 1) * 12;
-      for (let m = monthStart; m < monthEnd; m++) {
+      for (let m = (year - 1) * 12; m < monthEnd; m++) {
         cumPrincipal += result.amortizationSchedule[m].principal;
         cumInterest += result.amortizationSchedule[m].interest;
       }
@@ -51,14 +49,13 @@ const MortgageCalculator: React.FC = () => {
 
   const interestRatio = result.totalPaid > 0 ? (result.totalInterest / result.totalPaid) * 100 : 0;
   const principalRatio = 100 - interestRatio;
+  const noMortgage = loanAmount <= 0;
 
   const tableRows = useMemo(() => {
     const s = result.amortizationSchedule;
     if (s.length <= 120) return { rows: s, truncated: false };
     return { first: s.slice(0, 60), last: s.slice(-60), truncated: true };
   }, [result]);
-
-  const noMortgage = loanAmount <= 0;
 
   const pdfData = {
     title: 'Hypotéka',
@@ -68,47 +65,51 @@ const MortgageCalculator: React.FC = () => {
       'Výše úvěru': formatCurrency(loanAmount),
       'Úroková sazba': formatPercent(interestRate),
       'Doba splácení': `${loanTerm} let`,
-      'Měsíční nájem': formatCurrency(monthlyRent),
-      'Měsíční náklady': formatCurrency(monthlyExpenses),
-      'Roční zhodnocení': formatPercent(annualAppreciation),
-      'Míra neobsazenosti': formatPercent(vacancyRate, 0),
     },
     results: {
       'Měsíční splátka': formatCurrency(result.monthlyPayment),
       'Celkem zaplaceno': formatCurrency(result.totalPaid),
       'Celkem na úrocích': formatCurrency(result.totalInterest),
       'Měsíční cash flow': formatCurrency(monthlyCashFlow),
-      'Roční cash flow': formatCurrency(annualCashFlow),
     },
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="calculator-card space-y-4 lg:max-w-md">
-        <h2 className="text-lg font-semibold text-foreground">Parametry hypotéky</h2>
-        <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
-        <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
-        
-        <div className="bg-muted rounded-lg p-3 space-y-1">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Výše úvěru:</span>
-            <span className="font-semibold text-foreground [font-variant-numeric:tabular-nums]">{formatCurrency(loanAmount)}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">LTV:</span>
-            <span className="font-semibold text-foreground">{formatPercent(ltv, 0)}</span>
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6">
+      <div className="calculator-card space-y-5">
+        <div>
+          <p className="section-title mb-4">Parametry nemovitosti</p>
+          <div className="space-y-4">
+            <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
+            <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
           </div>
         </div>
 
-        <SliderInput label="Úroková sazba (% p.a.)" value={interestRate} onChange={setInterestRate} min={0.1} max={15} step={0.1} unit="%" />
-        <SliderInput label="Doba splácení" value={loanTerm} onChange={setLoanTerm} min={1} max={40} step={1} unit="let" />
+        <div className="rounded-lg p-3.5 space-y-1.5" style={{ background: 'linear-gradient(135deg, hsl(var(--primary-50)), hsl(var(--blue-50)))' }}>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Výše úvěru</span>
+            <span className="font-bold text-foreground stat-value">{formatCurrency(loanAmount)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">LTV</span>
+            <span className="font-bold text-foreground stat-value">{formatPercent(ltv, 0)}</span>
+          </div>
+        </div>
 
-        <hr className="border-border" />
-        <h3 className="text-sm font-semibold text-foreground">Příjmy a náklady</h3>
-        <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit="CZK" />
-        <InputField label="Měsíční náklady (správa, fond oprav)" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit="CZK" />
-        <SliderInput label="Roční zhodnocení nemovitosti" value={annualAppreciation} onChange={setAnnualAppreciation} min={-5} max={15} step={0.1} unit="%" />
-        <SliderInput label="Míra neobsazenosti" value={vacancyRate} onChange={setVacancyRate} min={0} max={50} step={1} unit="%" />
+        <div className="space-y-4">
+          <SliderInput label="Úroková sazba (% p.a.)" value={interestRate} onChange={setInterestRate} min={0.1} max={15} step={0.1} unit="%" />
+          <SliderInput label="Doba splácení" value={loanTerm} onChange={setLoanTerm} min={1} max={40} step={1} unit="let" />
+        </div>
+
+        <div className="border-t border-border/50 pt-4">
+          <p className="section-title mb-4">Příjmy a náklady</p>
+          <div className="space-y-4">
+            <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit="CZK" />
+            <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit="CZK" />
+            <SliderInput label="Roční zhodnocení" value={annualAppreciation} onChange={setAnnualAppreciation} min={-5} max={15} step={0.1} unit="%" />
+            <SliderInput label="Míra neobsazenosti" value={vacancyRate} onChange={setVacancyRate} min={0} max={50} step={1} unit="%" />
+          </div>
+        </div>
       </div>
 
       <div className="space-y-6" ref={printRef}>
@@ -120,35 +121,19 @@ const MortgageCalculator: React.FC = () => {
         ) : (
           <>
             <ResultCard>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
-                  <span className="text-sm text-muted-foreground">Měsíční splátka</span>
-                  <p className="text-3xl font-bold text-foreground [font-variant-numeric:tabular-nums]">{formatCurrency(result.monthlyPayment)}</p>
+                  <p className="section-title mb-1">Měsíční splátka</p>
+                  <p className="text-3xl font-extrabold text-foreground stat-value">{formatCurrency(result.monthlyPayment)}</p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-muted-foreground">Celkem zaplaceno</span>
-                    <p className="text-lg font-semibold text-foreground [font-variant-numeric:tabular-nums]">{formatCurrency(result.totalPaid)}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-muted-foreground">Celkem na úrocích</span>
-                    <p className="text-lg font-semibold text-loss [font-variant-numeric:tabular-nums]">{formatCurrency(result.totalInterest)}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-muted-foreground">Poměr úrok/jistina</span>
-                    <p className="text-lg font-semibold text-foreground">{formatPercent(interestRatio, 0)} / {formatPercent(principalRatio, 0)}</p>
-                  </div>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  <StatItem label="Celkem zaplaceno" value={formatCurrency(result.totalPaid)} />
+                  <StatItem label="Celkem na úrocích" value={formatCurrency(result.totalInterest)} className="text-loss" />
+                  <StatItem label="Poměr úrok/jistina" value={`${formatPercent(interestRatio, 0)} / ${formatPercent(principalRatio, 0)}`} />
                 </div>
-                <hr className="border-border" />
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-muted-foreground">Měsíční cash flow</span>
-                    <p className={`text-lg font-semibold [font-variant-numeric:tabular-nums] ${monthlyCashFlow >= 0 ? 'text-profit' : 'text-loss'}`}>{formatCurrency(monthlyCashFlow)}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-muted-foreground">Roční cash flow</span>
-                    <p className={`text-lg font-semibold [font-variant-numeric:tabular-nums] ${annualCashFlow >= 0 ? 'text-profit' : 'text-loss'}`}>{formatCurrency(annualCashFlow)}</p>
-                  </div>
+                <div className="border-t border-border/30 pt-3 grid grid-cols-2 gap-x-6">
+                  <StatItem label="Měsíční cash flow" value={formatCurrency(monthlyCashFlow)} className={monthlyCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
+                  <StatItem label="Roční cash flow" value={formatCurrency(annualCashFlow)} className={annualCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
                 </div>
               </div>
             </ResultCard>
@@ -156,69 +141,58 @@ const MortgageCalculator: React.FC = () => {
             <ExportButtons printRef={printRef} pdfData={pdfData} tabName="hypoteka" />
 
             <div className="calculator-card">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Amortizační graf</h3>
-              <ResponsiveContainer width="100%" height={window.innerWidth < 1024 ? 300 : 400}>
-                <AreaChart data={chartData}>
-                  <XAxis dataKey="rok" label={{ value: 'Rok', position: 'insideBottom', offset: -5 }} />
-                  <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
-                  <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                  <Legend />
-                  <Area type="monotone" dataKey="jistina" name="Jistina" stackId="1" fill="#3b82f6" stroke="#3b82f6" />
-                  <Area type="monotone" dataKey="urok" name="Úrok" stackId="1" fill="#ef4444" stroke="#ef4444" />
-                  <Area type="monotone" dataKey="zustatek" name="Zůstatek" fill="transparent" stroke="#6b7280" strokeDasharray="5 5" />
-                </AreaChart>
-              </ResponsiveContainer>
+              <h3 className="section-title mb-4">Amortizační graf</h3>
+              <div className="h-[300px] lg:h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
+                    <defs>
+                      <linearGradient id="gradPrincipal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.2} />
+                      </linearGradient>
+                      <linearGradient id="gradInterest" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
+                        <stop offset="100%" stopColor="#ef4444" stopOpacity={0.2} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="rok" tick={{ fontSize: 12 }} />
+                    <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
+                    <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                    <Legend />
+                    <Area type="monotone" dataKey="jistina" name="Jistina" stackId="1" fill="url(#gradPrincipal)" stroke="#3b82f6" strokeWidth={2} />
+                    <Area type="monotone" dataKey="urok" name="Úrok" stackId="1" fill="url(#gradInterest)" stroke="#ef4444" strokeWidth={2} />
+                    <Area type="monotone" dataKey="zustatek" name="Zůstatek" fill="transparent" stroke="#6b7280" strokeWidth={2} strokeDasharray="5 5" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
             <div className="calculator-card">
-              <button onClick={() => setShowTable(!showTable)} className="btn-primary text-sm">
+              <button onClick={() => setShowTable(!showTable)} className="btn-secondary flex items-center gap-2 w-full justify-center">
+                {showTable ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 {showTable ? 'Skrýt amortizační tabulku' : 'Zobrazit amortizační tabulku'}
               </button>
               {showTable && (
-                <div className="mt-4 overflow-x-auto">
+                <div className="mt-4 overflow-x-auto rounded-lg border border-border/50">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-muted sticky top-0">
-                        <th className="px-3 py-2 text-left">Měsíc</th>
-                        <th className="px-3 py-2 text-right">Splátka</th>
-                        <th className="px-3 py-2 text-right">Jistina</th>
-                        <th className="px-3 py-2 text-right">Úrok</th>
-                        <th className="px-3 py-2 text-right">Zůstatek</th>
+                      <tr className="bg-muted/70">
+                        <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Měsíc</th>
+                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Splátka</th>
+                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Jistina</th>
+                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Úrok</th>
+                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Zůstatek</th>
                       </tr>
                     </thead>
-                    <tbody className="[font-variant-numeric:tabular-nums]">
+                    <tbody className="stat-value">
                       {tableRows.truncated ? (
                         <>
-                          {(tableRows as any).first.map((row: any) => (
-                            <tr key={row.month} className={row.month % 2 === 0 ? 'bg-muted/50' : ''}>
-                              <td className="px-3 py-1">{row.month}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.payment)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.principal)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.interest)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.balance)}</td>
-                            </tr>
-                          ))}
-                          <tr><td colSpan={5} className="text-center py-2 text-muted-foreground">...</td></tr>
-                          {(tableRows as any).last.map((row: any) => (
-                            <tr key={row.month} className={row.month % 2 === 0 ? 'bg-muted/50' : ''}>
-                              <td className="px-3 py-1">{row.month}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.payment)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.principal)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.interest)}</td>
-                              <td className="px-3 py-1 text-right">{formatCurrency(row.balance)}</td>
-                            </tr>
-                          ))}
+                          {(tableRows as any).first.map((row: any) => <TableRow key={row.month} row={row} />)}
+                          <tr><td colSpan={5} className="text-center py-3 text-muted-foreground font-sans">⋯</td></tr>
+                          {(tableRows as any).last.map((row: any) => <TableRow key={row.month} row={row} />)}
                         </>
                       ) : (
-                        (tableRows as any).rows?.map((row: any) => (
-                          <tr key={row.month} className={row.month % 2 === 0 ? 'bg-muted/50' : ''}>
-                            <td className="px-3 py-1">{row.month}</td>
-                            <td className="px-3 py-1 text-right">{formatCurrency(row.payment)}</td>
-                            <td className="px-3 py-1 text-right">{formatCurrency(row.principal)}</td>
-                            <td className="px-3 py-1 text-right">{formatCurrency(row.interest)}</td>
-                            <td className="px-3 py-1 text-right">{formatCurrency(row.balance)}</td>
-                          </tr>
-                        ))
+                        (tableRows as any).rows?.map((row: any) => <TableRow key={row.month} row={row} />)
                       )}
                     </tbody>
                   </table>
@@ -231,5 +205,22 @@ const MortgageCalculator: React.FC = () => {
     </div>
   );
 };
+
+const StatItem: React.FC<{ label: string; value: string; className?: string }> = ({ label, value, className = 'text-foreground' }) => (
+  <div>
+    <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
+    <p className={`text-lg font-bold stat-value ${className}`}>{value}</p>
+  </div>
+);
+
+const TableRow: React.FC<{ row: any }> = ({ row }) => (
+  <tr className="border-t border-border/30 hover:bg-muted/30 transition-colors">
+    <td className="px-3 py-1.5">{row.month}</td>
+    <td className="px-3 py-1.5 text-right">{formatCurrency(row.payment)}</td>
+    <td className="px-3 py-1.5 text-right">{formatCurrency(row.principal)}</td>
+    <td className="px-3 py-1.5 text-right">{formatCurrency(row.interest)}</td>
+    <td className="px-3 py-1.5 text-right">{formatCurrency(row.balance)}</td>
+  </tr>
+);
 
 export default MortgageCalculator;

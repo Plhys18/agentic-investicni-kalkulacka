@@ -6,6 +6,7 @@ import { ETF_DEFAULTS } from '@/lib/constants';
 import { calculateCompoundInterest } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const ETFCalculator: React.FC = () => {
   const [initialInvestment, setInitialInvestment] = useState(ETF_DEFAULTS.initialInvestment);
@@ -13,11 +14,9 @@ const ETFCalculator: React.FC = () => {
   const [annualReturn, setAnnualReturn] = useState(ETF_DEFAULTS.annualReturn);
   const [years, setYears] = useState(ETF_DEFAULTS.years);
   const [showTable, setShowTable] = useState(false);
-
   const printRef = useRef<HTMLDivElement>(null);
 
   const result = useMemo(() => calculateCompoundInterest(initialInvestment, monthlyContribution, annualReturn, years), [initialInvestment, monthlyContribution, annualReturn, years]);
-
   const cagr = result.totalInvested > 0 ? (Math.pow(result.finalValue / result.totalInvested, 1 / years) - 1) * 100 : 0;
 
   const pdfData = {
@@ -38,39 +37,29 @@ const ETFCalculator: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="calculator-card space-y-4 lg:max-w-md">
-        <h2 className="text-lg font-semibold text-foreground">Parametry ETF investice</h2>
-        <SliderInput label="Počáteční investice" value={initialInvestment} onChange={setInitialInvestment} min={0} max={30000000} step={50000} unit="CZK" />
-        <SliderInput label="Měsíční vklad" value={monthlyContribution} onChange={setMonthlyContribution} min={0} max={500000} step={1000} unit="CZK" />
-        <SliderInput label="Očekávaný roční výnos" value={annualReturn} onChange={setAnnualReturn} min={-10} max={30} step={0.1} unit="%" />
-        <SliderInput label="Investiční horizont" value={years} onChange={setYears} min={1} max={50} step={1} unit="let" />
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6">
+      <div className="calculator-card space-y-5">
+        <p className="section-title mb-2">Parametry ETF investice</p>
+        <div className="space-y-4">
+          <SliderInput label="Počáteční investice" value={initialInvestment} onChange={setInitialInvestment} min={0} max={30000000} step={50000} unit="CZK" />
+          <SliderInput label="Měsíční vklad" value={monthlyContribution} onChange={setMonthlyContribution} min={0} max={500000} step={1000} unit="CZK" />
+          <SliderInput label="Očekávaný roční výnos" value={annualReturn} onChange={setAnnualReturn} min={-10} max={30} step={0.1} unit="%" />
+          <SliderInput label="Investiční horizont" value={years} onChange={setYears} min={1} max={50} step={1} unit="let" />
+        </div>
       </div>
 
       <div className="space-y-6" ref={printRef}>
         <ResultCard>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <span className="text-sm text-muted-foreground">Celková hodnota</span>
-              <p className="text-3xl font-bold text-profit [font-variant-numeric:tabular-nums]">{formatCurrency(result.finalValue)}</p>
+              <p className="section-title mb-1">Celková hodnota</p>
+              <p className="text-3xl font-extrabold text-profit stat-value">{formatCurrency(result.finalValue)}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-sm text-muted-foreground">Celkem investováno</span>
-                <p className="text-lg font-semibold text-foreground [font-variant-numeric:tabular-nums]">{formatCurrency(result.totalInvested)}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Celkový výnos</span>
-                <p className="text-lg font-semibold text-profit [font-variant-numeric:tabular-nums]">{formatCurrency(result.totalEarnings)}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">ROI</span>
-                <p className="text-lg font-semibold text-foreground">{formatPercent(result.roi)}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Roční ROI (CAGR)</span>
-                <p className="text-lg font-semibold text-foreground">{formatPercent(cagr)}</p>
-              </div>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+              <StatItem label="Celkem investováno" value={formatCurrency(result.totalInvested)} />
+              <StatItem label="Celkový výnos" value={formatCurrency(result.totalEarnings)} className="text-profit" />
+              <StatItem label="ROI" value={formatPercent(result.roi)} />
+              <StatItem label="Roční ROI (CAGR)" value={formatPercent(cagr)} />
             </div>
           </div>
         </ResultCard>
@@ -78,41 +67,54 @@ const ETFCalculator: React.FC = () => {
         <ExportButtons printRef={printRef} pdfData={pdfData} tabName="etf" />
 
         <div className="calculator-card">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Růst portfolia</h3>
-          <ResponsiveContainer width="100%" height={window.innerWidth < 1024 ? 300 : 400}>
-            <AreaChart data={result.timeline}>
-              <XAxis dataKey="year" label={{ value: 'Rok', position: 'insideBottom', offset: -5 }} />
-              <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
-              <Tooltip formatter={(value: number) => formatCurrency(value)} />
-              <Legend />
-              <Area type="monotone" dataKey="invested" name="Investováno" stackId="1" fill="#3b82f6" stroke="#3b82f6" />
-              <Area type="monotone" dataKey="value" name="Celková hodnota" fill="#10b981" stroke="#10b981" fillOpacity={0.3} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <h3 className="section-title mb-4">Růst portfolia</h3>
+          <div className="h-[300px] lg:h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={result.timeline}>
+                <defs>
+                  <linearGradient id="gradInvested" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="gradValue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.6} />
+                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="year" tick={{ fontSize: 12 }} />
+                <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
+                <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                <Legend />
+                <Area type="monotone" dataKey="invested" name="Investováno" fill="url(#gradInvested)" stroke="#3b82f6" strokeWidth={2} />
+                <Area type="monotone" dataKey="value" name="Celková hodnota" fill="url(#gradValue)" stroke="#10b981" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         <div className="calculator-card">
-          <button onClick={() => setShowTable(!showTable)} className="btn-primary text-sm">
+          <button onClick={() => setShowTable(!showTable)} className="btn-secondary flex items-center gap-2 w-full justify-center">
+            {showTable ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             {showTable ? 'Skrýt tabulku' : 'Zobrazit tabulku po ročích'}
           </button>
           {showTable && (
-            <div className="mt-4 overflow-x-auto">
+            <div className="mt-4 overflow-x-auto rounded-lg border border-border/50">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-muted">
-                    <th className="px-3 py-2 text-left">Rok</th>
-                    <th className="px-3 py-2 text-right">Hodnota</th>
-                    <th className="px-3 py-2 text-right">Investováno</th>
-                    <th className="px-3 py-2 text-right">Výnos</th>
+                  <tr className="bg-muted/70">
+                    <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rok</th>
+                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Hodnota</th>
+                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Investováno</th>
+                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Výnos</th>
                   </tr>
                 </thead>
-                <tbody className="[font-variant-numeric:tabular-nums]">
+                <tbody className="stat-value">
                   {result.timeline.map((row) => (
-                    <tr key={row.year} className={row.year % 2 === 0 ? 'bg-muted/50' : ''}>
-                      <td className="px-3 py-1">{row.year}</td>
-                      <td className="px-3 py-1 text-right">{formatCurrency(row.value)}</td>
-                      <td className="px-3 py-1 text-right">{formatCurrency(row.invested)}</td>
-                      <td className="px-3 py-1 text-right text-profit">{formatCurrency(row.earnings)}</td>
+                    <tr key={row.year} className="border-t border-border/30 hover:bg-muted/30 transition-colors">
+                      <td className="px-3 py-1.5">{row.year}</td>
+                      <td className="px-3 py-1.5 text-right">{formatCurrency(row.value)}</td>
+                      <td className="px-3 py-1.5 text-right">{formatCurrency(row.invested)}</td>
+                      <td className="px-3 py-1.5 text-right text-profit">{formatCurrency(row.earnings)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -124,5 +126,12 @@ const ETFCalculator: React.FC = () => {
     </div>
   );
 };
+
+const StatItem: React.FC<{ label: string; value: string; className?: string }> = ({ label, value, className = 'text-foreground' }) => (
+  <div>
+    <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
+    <p className={`text-lg font-bold stat-value ${className}`}>{value}</p>
+  </div>
+);
 
 export default ETFCalculator;
