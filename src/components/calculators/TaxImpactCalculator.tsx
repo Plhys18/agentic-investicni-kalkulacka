@@ -3,6 +3,7 @@ import SliderInput from '@/components/ui/SliderInput';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
 import { calculateCompoundInterest } from '@/lib/calculations';
+import { maxAmount } from '@/lib/constants';
 import { formatCurrency, formatPercent, formatNumber } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -100,7 +101,7 @@ const TaxImpactCalculator: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={0} max={500000000} step={100000} unit={currency} />
+          <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={0} max={maxAmount(currency)} step={100000} unit={currency} />
           <SliderInput label={t('tax.investmentYears')} value={investmentYears} onChange={(v) => setTax({ investmentYears: v })} min={1} max={30} step={1} unit={t('common.years')} />
         </div>
 
