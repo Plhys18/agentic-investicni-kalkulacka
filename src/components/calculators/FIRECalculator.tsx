@@ -129,20 +129,20 @@ const FIRECalculator: React.FC = () => {
           </ResultCard>
           <ResultCard>
             <div className="flex items-center gap-2 mb-2">
+              <TrendingUp size={16} className="text-profit" />
+              <p className="section-title">{t('fire.savingsRate')}</p>
+            </div>
+            <p className="text-2xl font-black stat-value text-profit">{formatPercent(results.savingsRate)}</p>
+            <p className="text-[10px] text-muted-foreground mt-1">{t('fire.savingsRateDesc')}</p>
+          </ResultCard>
+          <ResultCard>
+            <div className="flex items-center gap-2 mb-2">
               <Calendar size={16} className="text-primary" />
               <p className="section-title">{t('fire.yearsToFIRE')}</p>
             </div>
             <p className="text-2xl font-black stat-value text-primary">
               {results.reached ? `${formatNumber(results.yearsToFIRE, 1)} ${t('common.years')}` : `50+ ${t('common.years')}`}
             </p>
-          </ResultCard>
-          <ResultCard>
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp size={16} className="text-profit" />
-              <p className="section-title">{t('fire.savingsRate')}</p>
-            </div>
-            <p className="text-2xl font-black stat-value text-profit">{formatPercent(results.savingsRate)}</p>
-            <p className="text-[10px] text-muted-foreground mt-1">{t('fire.savingsRateDesc')}</p>
           </ResultCard>
         </div>
 
