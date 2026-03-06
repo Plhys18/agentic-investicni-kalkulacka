@@ -10,11 +10,17 @@ import { CurrencyProvider, type Currency } from '@/hooks/useCurrency';
 import { LanguageProvider, useLanguage } from '@/hooks/useLanguage';
 import { CalculatorProvider, useCalculatorStore } from '@/hooks/useCalculatorStore';
 
+const RATES_TO_CZK: Record<Currency, number> = { CZK: 1, EUR: 25, USD: 23 };
+
+const convertFn = (amount: number, from: Currency, to: Currency) => {
+  if (from === to) return amount;
+  const inCZK = amount * RATES_TO_CZK[from];
+  return inCZK / RATES_TO_CZK[to];
+};
+
 const IndexInner: React.FC = () => {
   const { isDark, toggle } = useDarkMode();
   const [activeTab, setActiveTab] = useState(0);
-  const store = useCalculatorStore();
-  const { convert } = useCurrencyFromInner();
   const { t } = useLanguage();
 
   return (
@@ -53,32 +59,10 @@ const IndexInner: React.FC = () => {
   );
 };
 
-// Helper to access useCurrency inside the provider tree
-function useCurrencyFromInner() {
-  const { convert } = require('@/hooks/useCurrency').useCurrency();
-  return { convert };
-}
-
-const Index: React.FC = () => {
-  return (
-    <LanguageProvider>
-      <CalculatorProvider>
-        <CurrencyWrapper />
-      </CalculatorProvider>
-    </LanguageProvider>
-  );
-};
-
 const CurrencyWrapper: React.FC = () => {
   const store = useCalculatorStore();
 
   const handleCurrencyChange = useCallback((from: Currency, to: Currency) => {
-    const RATES_TO_CZK: Record<Currency, number> = { CZK: 1, EUR: 25, USD: 23 };
-    const convertFn = (amount: number, f: Currency, t: Currency) => {
-      if (f === t) return amount;
-      const inCZK = amount * RATES_TO_CZK[f];
-      return inCZK / RATES_TO_CZK[t];
-    };
     store.convertAllValues(from, to, convertFn);
   }, [store]);
 
@@ -88,5 +72,13 @@ const CurrencyWrapper: React.FC = () => {
     </CurrencyProvider>
   );
 };
+
+const Index: React.FC = () => (
+  <LanguageProvider>
+    <CalculatorProvider>
+      <CurrencyWrapper />
+    </CalculatorProvider>
+  </LanguageProvider>
+);
 
 export default Index;
