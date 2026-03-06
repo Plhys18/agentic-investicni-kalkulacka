@@ -8,8 +8,8 @@ const TabBar: React.FC<{ activeTab: number; onTabChange: (index: number) => void
   const tabs = [
     { label: t('tab.mortgage'), icon: Home },
     { label: t('tab.etf'), icon: TrendingUp },
-    { label: t('tab.dca'), icon: Coins },
     { label: t('tab.comparison'), icon: BarChart3 },
+    { label: t('tab.dca'), icon: Coins },
   ];
 
   return (
