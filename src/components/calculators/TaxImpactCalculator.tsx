@@ -177,6 +177,8 @@ const TaxImpactCalculator: React.FC = () => {
             </ResponsiveContainer>
           </div>
         </div>
+
+        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="tax" />
       </div>
     </div>
   );
