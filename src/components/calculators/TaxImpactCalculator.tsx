@@ -156,7 +156,6 @@ const TaxImpactCalculator: React.FC = () => {
           ))}
         </div>
 
-        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="tax" />
 
         <div className="calculator-card">
           <h3 className="section-title mb-4">{t('tax.grossVsNet')}</h3>
