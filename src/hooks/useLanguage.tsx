@@ -60,7 +60,7 @@ const translations: Record<string, Record<Lang, string>> = {
   'etf.totalInvested': { cs: 'Celkem investováno', en: 'Total invested' },
   'etf.totalReturn': { cs: 'Celkový výnos', en: 'Total return' },
   'etf.portfolioGrowth': { cs: 'Růst portfolia', en: 'Portfolio growth' },
-  'etf.showTable': { cs: 'Zobrazit tabulku po ročích', en: 'Show yearly table' },
+  'etf.showTable': { cs: 'Zobrazit tabulku po rocích', en: 'Show yearly table' },
   'etf.hideTable': { cs: 'Skrýt tabulku', en: 'Hide table' },
   'etf.invested': { cs: 'Investováno', en: 'Invested' },
 
