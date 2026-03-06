@@ -5,14 +5,7 @@ export function calculateMortgagePayment(inputs: MortgageInputs): MortgagePaymen
   const monthlyRate = inputs.interestRate / 100 / 12;
   const numPayments = inputs.loanTerm * 12;
 
-  let monthlyPayment: number;
-  if (monthlyRate === 0) {
-    monthlyPayment = principal / numPayments;
-  } else {
-    monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
-  }
-
-  if (principal <= 0) {
+  if (principal <= 0 || numPayments <= 0) {
     return {
       monthlyPayment: 0,
       principal: 0,
@@ -21,6 +14,17 @@ export function calculateMortgagePayment(inputs: MortgageInputs): MortgagePaymen
       totalInterest: 0,
       amortizationSchedule: [],
     };
+  }
+
+  let monthlyPayment: number;
+  if (monthlyRate === 0) {
+    monthlyPayment = principal / numPayments;
+  } else {
+    monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+  }
+
+  if (!isFinite(monthlyPayment) || isNaN(monthlyPayment)) {
+    return { monthlyPayment: 0, principal: 0, interest: 0, totalPaid: 0, totalInterest: 0, amortizationSchedule: [] };
   }
 
   const schedule: MortgagePayment['amortizationSchedule'] = [];
@@ -61,8 +65,8 @@ export function calculateCompoundInterest(
   years: number
 ): CompoundInterestResult {
   const monthlyRate = annualReturn / 100 / 12;
-  const totalMonths = years * 12;
-  let value = initialInvestment;
+  const totalMonths = Math.max(0, years * 12);
+  let value = initialInvestment || 0;
   const timeline: CompoundInterestResult['timeline'] = [];
 
   for (let month = 1; month <= totalMonths; month++) {
@@ -137,7 +141,7 @@ export function calculateComparison(
   const differencePercent = avgNetWorth > 0 ? (difference / avgNetWorth) * 100 : 0;
 
   const mortgageROI = mortgage.downPayment > 0 ? ((mortgageNetWorth - mortgage.downPayment) / mortgage.downPayment) * 100 : 0;
-  const mortgageAnnualROI = mortgage.downPayment > 0 ? (Math.pow(mortgageNetWorth / mortgage.downPayment, 1 / comparisonYears) - 1) * 100 : 0;
+  const mortgageAnnualROI = mortgage.downPayment > 0 && mortgageNetWorth > 0 ? (Math.pow(mortgageNetWorth / mortgage.downPayment, 1 / comparisonYears) - 1) * 100 : 0;
 
   const propertyValueFinal = mortgage.propertyPrice * Math.pow(1 + mortgage.annualAppreciation / 100, comparisonYears);
   const remainingDebtFinal = comparisonYears * 12 <= mortgagePayment.amortizationSchedule.length

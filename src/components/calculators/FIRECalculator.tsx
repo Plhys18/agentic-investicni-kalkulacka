@@ -108,10 +108,10 @@ const FIRECalculator: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <SliderInput label={t('fire.currentSavings')} value={currentSavings} onChange={(v) => setFIRE({ currentSavings: v })} min={0} max={50000000} step={50000} unit={currency} />
-          <SliderInput label={t('fire.monthlyIncome')} value={monthlyIncome} onChange={(v) => setFIRE({ monthlyIncome: v })} min={0} max={1000000} step={1000} unit={currency} />
-          <SliderInput label={t('fire.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setFIRE({ monthlyExpenses: v })} min={0} max={500000} step={1000} unit={currency} />
-          <SliderInput label={t('fire.monthlySavings')} value={monthlySavings} onChange={(v) => setFIRE({ monthlySavings: v })} min={0} max={500000} step={1000} unit={currency} />
+          <SliderInput label={t('fire.currentSavings')} value={currentSavings} onChange={(v) => setFIRE({ currentSavings: v })} min={0} max={500000000} step={50000} unit={currency} />
+          <SliderInput label={t('fire.monthlyIncome')} value={monthlyIncome} onChange={(v) => setFIRE({ monthlyIncome: v })} min={0} max={50000000} step={1000} unit={currency} />
+          <SliderInput label={t('fire.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setFIRE({ monthlyExpenses: v })} min={0} max={50000000} step={1000} unit={currency} />
+          <SliderInput label={t('fire.monthlySavings')} value={monthlySavings} onChange={(v) => setFIRE({ monthlySavings: v })} min={0} max={50000000} step={1000} unit={currency} />
           <SliderInput label={t('fire.annualReturn')} value={annualReturn} onChange={(v) => setFIRE({ annualReturn: v })} min={1} max={20} step={0.5} unit="%" />
           <SliderInput label={t('fire.withdrawalRate')} value={withdrawalRate} onChange={(v) => setFIRE({ withdrawalRate: v })} min={2} max={6} step={0.25} unit="%" />
         </div>

@@ -78,7 +78,7 @@ const MortgageCalculator: React.FC = () => {
       <div className="calculator-card space-y-5">
         <p className="section-title mb-4">{t('mortgage.params')}</p>
         <div className="space-y-4">
-          <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={500000} max={30000000} step={100000} unit={currency} />
+          <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={0} max={500000000} step={100000} unit={currency} />
           <SliderInput label={t('mortgage.downPayment')} value={downPayment} onChange={(v) => setMortgage({ downPayment: Math.min(v, propertyPrice) })} min={0} max={propertyPrice} step={50000} unit={currency} />
         </div>
 
