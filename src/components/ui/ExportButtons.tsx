@@ -1,7 +1,8 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Download, Printer } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import jsPDF from 'jspdf';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ExportButtonsProps {
   printRef: React.RefObject<HTMLDivElement>;
@@ -9,39 +10,85 @@ interface ExportButtonsProps {
   tabName: string;
 }
 
+/** Strip diacritics for jsPDF which doesn't support them natively */
+function stripDiacritics(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 const ExportButtons: React.FC<ExportButtonsProps> = ({ printRef, pdfData, tabName }) => {
   const handlePrint = useReactToPrint({ contentRef: printRef });
+  const { t } = useLanguage();
 
   const handlePDF = useCallback(() => {
     const doc = new jsPDF();
     const date = new Date().toISOString().slice(0, 10);
+    const s = stripDiacritics;
 
-    doc.setFontSize(16);
-    doc.text(`Investicni Kalkulacka - ${pdfData.title}`, 20, 20);
+    // Title
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s(`${pdfData.title}`), 20, 22);
+
     doc.setFontSize(10);
-    doc.text(`Datum: ${date}`, 20, 30);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(120, 120, 120);
+    doc.text(`${date}`, 20, 30);
+    doc.setTextColor(0, 0, 0);
 
-    let y = 45;
-    doc.setFontSize(12);
-    doc.text('Vstupni parametry:', 20, y);
+    // Divider
+    doc.setDrawColor(220, 220, 220);
+    doc.line(20, 34, 190, 34);
+
+    let y = 42;
+
+    // Inputs section
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s('Vstupni parametry'), 20, y);
     y += 8;
+
     doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
     Object.entries(pdfData.inputs).forEach(([key, val]) => {
-      doc.text(`${key}: ${val}`, 25, y);
-      y += 6;
+      doc.setTextColor(100, 100, 100);
+      doc.text(s(key), 25, y);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text(s(val), 190, y, { align: 'right' });
+      doc.setFont('helvetica', 'normal');
+      y += 7;
       if (y > 270) { doc.addPage(); y = 20; }
     });
 
-    y += 5;
-    doc.setFontSize(12);
-    doc.text('Vysledky:', 20, y);
+    // Divider
+    y += 3;
+    doc.line(20, y, 190, y);
     y += 8;
+
+    // Results section
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s('Vysledky'), 20, y);
+    y += 8;
+
     doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
     Object.entries(pdfData.results).forEach(([key, val]) => {
-      doc.text(`${key}: ${val}`, 25, y);
-      y += 6;
+      doc.setTextColor(100, 100, 100);
+      doc.text(s(key), 25, y);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text(s(val), 190, y, { align: 'right' });
+      doc.setFont('helvetica', 'normal');
+      y += 7;
       if (y > 270) { doc.addPage(); y = 20; }
     });
+
+    // Footer
+    y += 10;
+    doc.setFontSize(8);
+    doc.setTextColor(160, 160, 160);
+    doc.text(s('Investicni Kalkulacka — vojtazizka.cz'), 20, y);
 
     doc.save(`investicni-kalkulacka-${tabName}-${date}.pdf`);
   }, [pdfData, tabName]);
@@ -50,11 +97,11 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({ printRef, pdfData, tabNam
     <div className="flex gap-3 no-print">
       <button onClick={handlePDF} className="btn-primary flex items-center gap-2">
         <Download size={16} />
-        Exportovat PDF
+        {t('common.exportPDF')}
       </button>
       <button onClick={() => handlePrint()} className="btn-secondary flex items-center gap-2">
         <Printer size={16} />
-        Tisknout
+        {t('common.print')}
       </button>
     </div>
   );

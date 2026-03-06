@@ -1,31 +1,25 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import SliderInput from '@/components/ui/SliderInput';
 import InputField from '@/components/ui/InputField';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
-import { MORTGAGE_DEFAULTS, COMPARISON_DEFAULTS } from '@/lib/constants';
 import { calculateComparison } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useCalculatorStore } from '@/hooks/useCalculatorStore';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Home, TrendingUp, Trophy } from 'lucide-react';
 
 const ComparisonView: React.FC = () => {
   const { currency } = useCurrency();
+  const { t } = useLanguage();
   const fc = (n: number) => formatCurrency(n, currency);
-
-  const [propertyPrice, setPropertyPrice] = useState(MORTGAGE_DEFAULTS.propertyPrice);
-  const [downPayment, setDownPayment] = useState(MORTGAGE_DEFAULTS.downPayment);
-  const [interestRate, setInterestRate] = useState(MORTGAGE_DEFAULTS.interestRate);
-  const [loanTerm, setLoanTerm] = useState(MORTGAGE_DEFAULTS.loanTerm);
-  const [monthlyRent, setMonthlyRent] = useState(MORTGAGE_DEFAULTS.monthlyRent);
-  const [monthlyExpenses, setMonthlyExpenses] = useState(MORTGAGE_DEFAULTS.monthlyExpenses);
-  const [annualAppreciation, setAnnualAppreciation] = useState(MORTGAGE_DEFAULTS.annualAppreciation);
-  const [vacancyRate, setVacancyRate] = useState(MORTGAGE_DEFAULTS.vacancyRate);
-  const [comparisonYears, setComparisonYears] = useState(COMPARISON_DEFAULTS.comparisonYears);
-  const [etfReturn, setEtfReturn] = useState(COMPARISON_DEFAULTS.etfReturn);
+  const { mortgage, setMortgage, comparison, setComparison } = useCalculatorStore();
   const printRef = useRef<HTMLDivElement>(null);
 
+  const { propertyPrice, downPayment, interestRate, loanTerm, monthlyRent, monthlyExpenses, annualAppreciation, vacancyRate } = mortgage;
+  const { comparisonYears, etfReturn } = comparison;
   const loanAmount = Math.max(0, propertyPrice - downPayment);
 
   const { result, timeline } = useMemo(() => calculateComparison(
@@ -34,18 +28,17 @@ const ComparisonView: React.FC = () => {
   ), [propertyPrice, downPayment, loanAmount, interestRate, loanTerm, monthlyRent, monthlyExpenses, annualAppreciation, vacancyRate, etfReturn, comparisonYears]);
 
   const pdfData = {
-    title: 'Porovnání',
+    title: t('tab.comparison'),
     inputs: {
-      'Cena nemovitosti': fc(propertyPrice),
-      'Vlastní zdroje': fc(downPayment),
-      'Období porovnání': `${comparisonYears} let`,
-      'Výnos ETF': formatPercent(etfReturn),
+      [t('mortgage.propertyPrice')]: fc(propertyPrice),
+      [t('mortgage.downPayment')]: fc(downPayment),
+      [t('comp.period')]: `${comparisonYears} ${t('common.years')}`,
+      [t('comp.etfReturn')]: formatPercent(etfReturn),
     },
     results: {
-      'Nemovitost - čisté jmění': fc(result.mortgage.netWorth),
-      'ETF - celková hodnota': fc(result.etf.totalValue),
-      'Vítěz': result.winner === 'mortgage' ? 'Nemovitost' : 'ETF',
-      'Rozdíl': fc(Math.abs(result.difference)),
+      [t('comp.propertyInvestment')]: fc(result.mortgage.netWorth),
+      [t('comp.etfInvestment')]: fc(result.etf.totalValue),
+      [t('comp.difference')]: fc(Math.abs(result.difference)),
     },
   };
 
@@ -53,31 +46,29 @@ const ComparisonView: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6">
         <div className="calculator-card space-y-5">
-          <p className="section-title mb-2">Parametry porovnání</p>
+          <p className="section-title mb-2">{t('comp.params')}</p>
           <div className="space-y-4">
-            <SliderInput label="Období porovnání" value={comparisonYears} onChange={setComparisonYears} min={1} max={40} step={1} unit="let" />
-            <SliderInput label="Očekávaný roční výnos ETF" value={etfReturn} onChange={setEtfReturn} min={1} max={30} step={0.1} unit="%" />
+            <SliderInput label={t('comp.period')} value={comparisonYears} onChange={(v) => setComparison({ comparisonYears: v })} min={1} max={40} step={1} unit={t('common.years')} />
+            <SliderInput label={t('comp.etfReturn')} value={etfReturn} onChange={(v) => setComparison({ etfReturn: v })} min={1} max={30} step={0.1} unit="%" />
           </div>
           <div className="border-t border-border/50 pt-4">
-            <p className="section-title mb-4">Parametry nemovitosti</p>
+            <p className="section-title mb-4">{t('comp.propertyParams')}</p>
             <div className="space-y-4">
-              <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit={currency} />
-              <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit={currency} />
-              <SliderInput label="Úroková sazba (% p.a.)" value={interestRate} onChange={setInterestRate} min={0.1} max={15} step={0.1} unit="%" />
-              <SliderInput label="Doba splácení" value={loanTerm} onChange={setLoanTerm} min={1} max={40} step={1} unit="let" />
-              <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit={currency} />
-              <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit={currency} />
-              <SliderInput label="Roční zhodnocení" value={annualAppreciation} onChange={setAnnualAppreciation} min={-5} max={15} step={0.1} unit="%" />
-              <SliderInput label="Míra neobsazenosti" value={vacancyRate} onChange={setVacancyRate} min={0} max={50} step={1} unit="%" />
+              <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={500000} max={30000000} step={100000} unit={currency} />
+              <SliderInput label={t('mortgage.downPayment')} value={downPayment} onChange={(v) => setMortgage({ downPayment: Math.min(v, propertyPrice) })} min={0} max={propertyPrice} step={50000} unit={currency} />
+              <SliderInput label={t('mortgage.interestRate')} value={interestRate} onChange={(v) => setMortgage({ interestRate: v })} min={0.1} max={15} step={0.1} unit="%" />
+              <SliderInput label={t('mortgage.loanTerm')} value={loanTerm} onChange={(v) => setMortgage({ loanTerm: v })} min={1} max={40} step={1} unit={t('common.years')} />
+              <InputField label={t('mortgage.monthlyRent')} value={monthlyRent} onChange={(v) => setMortgage({ monthlyRent: v })} min={0} max={500000} step={500} unit={currency} />
+              <InputField label={t('mortgage.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setMortgage({ monthlyExpenses: v })} min={0} max={200000} step={500} unit={currency} />
+              <SliderInput label={t('mortgage.appreciation')} value={annualAppreciation} onChange={(v) => setMortgage({ annualAppreciation: v })} min={-5} max={15} step={0.1} unit="%" />
+              <SliderInput label={t('mortgage.vacancy')} value={vacancyRate} onChange={(v) => setMortgage({ vacancyRate: v })} min={0} max={50} step={1} unit="%" />
             </div>
           </div>
         </div>
 
         <div className="space-y-6" ref={printRef}>
           <div className={`rounded-2xl p-5 flex items-center gap-4 border ${
-            result.winner === 'mortgage'
-              ? 'bg-profit/5 border-profit/20'
-              : 'bg-primary/10 border-primary/30'
+            result.winner === 'mortgage' ? 'bg-profit/5 border-profit/20' : 'bg-primary/10 border-primary/30'
           }`}>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
               result.winner === 'mortgage' ? 'bg-profit/15' : 'bg-primary/20'
@@ -87,10 +78,10 @@ const ComparisonView: React.FC = () => {
             <div>
               <p className="font-black text-foreground text-lg tracking-tight">
                 {result.winner === 'mortgage'
-                  ? `Nemovitost vyhrává o ${fc(Math.abs(result.difference))}!`
-                  : `ETF vyhrává o ${fc(Math.abs(result.difference))}!`}
+                  ? `${t('comp.mortgageWins')} ${fc(Math.abs(result.difference))}!`
+                  : `${t('comp.etfWins')} ${fc(Math.abs(result.difference))}!`}
               </p>
-              <p className="text-sm text-muted-foreground">Rozdíl: {formatPercent(Math.abs(result.differencePercent))}</p>
+              <p className="text-sm text-muted-foreground">{t('comp.difference')}: {formatPercent(Math.abs(result.differencePercent))}</p>
             </div>
           </div>
 
@@ -100,18 +91,18 @@ const ComparisonView: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-profit/10 flex items-center justify-center">
                   <Home size={16} className="text-profit" />
                 </div>
-                <h3 className="font-bold text-foreground text-sm">Investice do nemovitosti</h3>
+                <h3 className="font-bold text-foreground text-sm">{t('comp.propertyInvestment')}</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
-                <Row label="Hodnota nemovitosti" value={fc(result.mortgage.propertyValue)} />
-                <Row label="Zbývající dluh" value={fc(result.mortgage.remainingDebt)} className="text-loss" />
-                <Row label="Kumulativní cash flow" value={fc(result.mortgage.cumulativeCashFlow)} className={result.mortgage.cumulativeCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
+                <Row label={t('comp.propertyValue')} value={fc(result.mortgage.propertyValue)} />
+                <Row label={t('comp.remainingDebt')} value={fc(result.mortgage.remainingDebt)} className="text-loss" />
+                <Row label={t('comp.cumulativeCF')} value={fc(result.mortgage.cumulativeCashFlow)} className={result.mortgage.cumulativeCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
                 <div className="border-t border-border/30 pt-2.5">
-                  <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
+                  <p className="text-xs text-muted-foreground font-sans">{t('comp.netWorth')}</p>
                   <p className="text-2xl font-black text-foreground tracking-tight">{fc(result.mortgage.netWorth)}</p>
                 </div>
-                <Row label="ROI" value={formatPercent(result.mortgage.roi)} />
-                <Row label="Roční ROI" value={formatPercent(result.mortgage.annualROI)} />
+                <Row label={t('common.roi')} value={formatPercent(result.mortgage.roi)} />
+                <Row label={t('common.annualROI')} value={formatPercent(result.mortgage.annualROI)} />
               </div>
             </ResultCard>
 
@@ -120,18 +111,18 @@ const ComparisonView: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center">
                   <TrendingUp size={16} className="text-primary" />
                 </div>
-                <h3 className="font-bold text-foreground text-sm">Investice do ETF</h3>
+                <h3 className="font-bold text-foreground text-sm">{t('comp.etfInvestment')}</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
-                <Row label="Celková hodnota" value={fc(result.etf.totalValue)} />
-                <Row label="Celkem investováno" value={fc(result.etf.totalInvested)} />
-                <Row label="Výnosy" value={fc(result.etf.earnings)} className="text-profit" />
+                <Row label={t('etf.totalValue')} value={fc(result.etf.totalValue)} />
+                <Row label={t('etf.totalInvested')} value={fc(result.etf.totalInvested)} />
+                <Row label={t('comp.earnings')} value={fc(result.etf.earnings)} className="text-profit" />
                 <div className="border-t border-border/30 pt-2.5">
-                  <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
+                  <p className="text-xs text-muted-foreground font-sans">{t('comp.netWorth')}</p>
                   <p className="text-2xl font-black text-foreground tracking-tight">{fc(result.etf.totalValue)}</p>
                 </div>
-                <Row label="ROI" value={formatPercent(result.etf.roi)} />
-                <Row label="Roční ROI" value={formatPercent(result.etf.annualROI)} />
+                <Row label={t('common.roi')} value={formatPercent(result.etf.roi)} />
+                <Row label={t('common.annualROI')} value={formatPercent(result.etf.annualROI)} />
               </div>
             </ResultCard>
           </div>
@@ -139,7 +130,7 @@ const ComparisonView: React.FC = () => {
           <ExportButtons printRef={printRef} pdfData={pdfData} tabName="porovnani" />
 
           <div className="calculator-card">
-            <h3 className="section-title mb-4">Srovnání v čase</h3>
+            <h3 className="section-title mb-4">{t('comp.timeComparison')}</h3>
             <div className="h-[350px] lg:h-[450px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={timeline}>
@@ -148,8 +139,8 @@ const ComparisonView: React.FC = () => {
                   <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                   <Legend />
                   <ReferenceLine y={downPayment} stroke="#9ca3af" strokeDasharray="3 3" />
-                  <Line type="monotone" dataKey="mortgageNetWorth" name="Nemovitost (čisté jmění)" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: '#10b981' }} />
-                  <Line type="monotone" dataKey="etfValue" name="ETF (hodnota portfolia)" stroke="#EAB308" strokeWidth={2.5} dot={{ r: 3, fill: '#EAB308' }} />
+                  <Line type="monotone" dataKey="mortgageNetWorth" name={t('comp.mortgageNetWorth')} stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: '#10b981' }} />
+                  <Line type="monotone" dataKey="etfValue" name={t('comp.etfPortfolio')} stroke="#EAB308" strokeWidth={2.5} dot={{ r: 3, fill: '#EAB308' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
