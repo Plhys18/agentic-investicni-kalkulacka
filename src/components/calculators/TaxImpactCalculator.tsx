@@ -131,24 +131,24 @@ const TaxImpactCalculator: React.FC = () => {
           {scenarios.map((s) => (
             <ResultCard key={s.id}>
               <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${s.color}20` }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${s.color}20` }}>
                   <span style={{ color: s.color }}>{s.icon}</span>
                 </div>
                 <h3 className="font-bold text-foreground text-sm">{t(`tax.${s.id}`)}</h3>
               </div>
-              <div className="space-y-2">
-                <div>
+              <div className="space-y-2 overflow-hidden">
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">{t('tax.afterTaxValue')}</p>
-                  <p className="text-2xl font-black stat-value" style={{ color: s.color }}>{fc(s.netValue)}</p>
+                  <p className="text-lg md:text-xl font-black stat-value truncate" style={{ color: s.color }}>{fc(s.netValue)}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[10px] text-muted-foreground">{t('tax.taxPaid')}</p>
-                    <p className="text-sm font-bold text-red-500 stat-value">{fc(s.taxPaid)}</p>
+                    <p className="text-xs md:text-sm font-bold text-red-500 stat-value truncate">{fc(s.taxPaid)}</p>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[10px] text-muted-foreground">{t('tax.netReturn')}</p>
-                    <p className="text-sm font-bold text-profit stat-value">{formatPercent(s.netReturn)}</p>
+                    <p className="text-xs md:text-sm font-bold text-profit stat-value truncate">{formatPercent(s.netReturn)}</p>
                   </div>
                 </div>
               </div>
