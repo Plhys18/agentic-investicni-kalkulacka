@@ -96,6 +96,8 @@ const ETFCalculator: React.FC = () => {
           </div>
         </div>
 
+        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="etf" />
+
         <div className="calculator-card">
           <button onClick={() => setShowTable(!showTable)} className="btn-secondary flex items-center gap-2 w-full justify-center">
             {showTable ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -125,8 +127,6 @@ const ETFCalculator: React.FC = () => {
             </div>
           )}
         </div>
-
-        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="etf" />
       </div>
     </div>
   );
