@@ -1,14 +1,19 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import TabBar from '@/components/layout/TabBar';
 import MortgageCalculator from '@/components/calculators/MortgageCalculator';
 import ETFCalculator from '@/components/calculators/ETFCalculator';
 import DCACalculator from '@/components/calculators/DCACalculator';
 import ComparisonView from '@/components/calculators/ComparisonView';
+import FIRECalculator from '@/components/calculators/FIRECalculator';
+import TaxImpactCalculator from '@/components/calculators/TaxImpactCalculator';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { CurrencyProvider, type Currency } from '@/hooks/useCurrency';
 import { LanguageProvider, useLanguage } from '@/hooks/useLanguage';
 import { CalculatorProvider, useCalculatorStore } from '@/hooks/useCalculatorStore';
+import { useShareURL, loadFromURL } from '@/hooks/useShareURL';
+import { useCurrency } from '@/hooks/useCurrency';
+import { Share2 } from 'lucide-react';
 
 const RATES_TO_CZK: Record<Currency, number> = { CZK: 1, EUR: 25, USD: 23 };
 
@@ -22,16 +27,39 @@ const IndexInner: React.FC = () => {
   const { isDark, toggle } = useDarkMode();
   const [activeTab, setActiveTab] = useState(0);
   const { t } = useLanguage();
+  const { lang, setLang } = useLanguage();
+  const { currency, setCurrency } = useCurrency();
+  const store = useCalculatorStore();
+  const { generateShareURL } = useShareURL(activeTab);
+
+  // Load shared URL params on mount
+  useEffect(() => {
+    loadFromURL(setActiveTab, store, setCurrency, setLang);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
       <Header isDark={isDark} toggle={toggle} />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* Share button */}
+        <div className="flex justify-end mb-4 no-print">
+          <button
+            onClick={generateShareURL}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary hover:bg-accent border border-border/50 transition-all duration-200 active:scale-95 text-sm font-medium text-foreground"
+          >
+            <Share2 size={14} />
+            {t('share.button')}
+          </button>
+        </div>
+
         <div style={{ display: activeTab === 0 ? 'block' : 'none' }}><MortgageCalculator /></div>
         <div style={{ display: activeTab === 1 ? 'block' : 'none' }}><ETFCalculator /></div>
         <div style={{ display: activeTab === 2 ? 'block' : 'none' }}><ComparisonView /></div>
         <div style={{ display: activeTab === 3 ? 'block' : 'none' }}><DCACalculator /></div>
+        <div style={{ display: activeTab === 4 ? 'block' : 'none' }}><FIRECalculator /></div>
+        <div style={{ display: activeTab === 5 ? 'block' : 'none' }}><TaxImpactCalculator /></div>
       </main>
       <footer className="py-8 border-t border-border/50 no-print">
         <div className="flex flex-col items-center gap-4">

@@ -18,6 +18,8 @@ const translations: Record<string, Record<Lang, string>> = {
   'tab.etf': { cs: 'Spoření & ETF', en: 'Savings & ETF' },
   'tab.comparison': { cs: 'Hypotéka vs ETF', en: 'Mortgage vs ETF' },
   'tab.dca': { cs: 'DCA Investice', en: 'DCA Investing' },
+  'tab.fire': { cs: 'FIRE', en: 'FIRE' },
+  'tab.tax': { cs: 'Daňový dopad', en: 'Tax Impact' },
 
   // Mortgage
   'mortgage.params': { cs: 'Parametry nemovitosti', en: 'Property parameters' },
@@ -95,6 +97,52 @@ const translations: Record<string, Record<Lang, string>> = {
   'comp.timeComparison': { cs: 'Srovnání v čase', en: 'Comparison over time' },
   'comp.mortgageNetWorth': { cs: 'Nemovitost (čisté jmění)', en: 'Property (net worth)' },
   'comp.etfPortfolio': { cs: 'ETF (hodnota portfolia)', en: 'ETF (portfolio value)' },
+
+  // FIRE
+  'fire.title': { cs: 'FIRE Kalkulačka', en: 'FIRE Calculator' },
+  'fire.currentSavings': { cs: 'Aktuální úspory', en: 'Current savings' },
+  'fire.monthlyIncome': { cs: 'Měsíční příjem', en: 'Monthly income' },
+  'fire.monthlyExpenses': { cs: 'Měsíční výdaje', en: 'Monthly expenses' },
+  'fire.monthlySavings': { cs: 'Měsíční úspory', en: 'Monthly savings' },
+  'fire.annualReturn': { cs: 'Očekávaný roční výnos', en: 'Expected annual return' },
+  'fire.withdrawalRate': { cs: 'Míra výběru (SWR)', en: 'Withdrawal rate (SWR)' },
+  'fire.withdrawalDesc': { cs: 'Pravidlo 4 % — bezpečná míra výběru pro 30+ let. Konzervativnější je 3–3,5 %.', en: '4% rule — safe withdrawal rate for 30+ years. More conservative is 3–3.5%.' },
+  'fire.fireTarget': { cs: 'Cílová částka FIRE', en: 'FIRE Target' },
+  'fire.yearsToFIRE': { cs: 'Roky do FIRE', en: 'Years to FIRE' },
+  'fire.savingsRate': { cs: 'Míra úspor', en: 'Savings Rate' },
+  'fire.savingsRateDesc': { cs: 'Vyšší míra úspor = rychlejší cesta k FIRE', en: 'Higher savings rate = faster path to FIRE' },
+  'fire.journeyChart': { cs: 'Cesta k finanční nezávislosti', en: 'Path to Financial Independence' },
+  'fire.portfolio': { cs: 'Portfolio', en: 'Portfolio' },
+  'fire.summary': { cs: 'Shrnutí po dosažení FIRE', en: 'Summary after reaching FIRE' },
+  'fire.monthlyPassiveIncome': { cs: 'Měsíční pasivní příjem', en: 'Monthly passive income' },
+  'fire.annualPassiveIncome': { cs: 'Roční pasivní příjem', en: 'Annual passive income' },
+  'fire.totalInvested': { cs: 'Celkem investováno', en: 'Total invested' },
+  'fire.totalReturn': { cs: 'Celkový výnos', en: 'Total return' },
+
+  // Tax Impact
+  'tax.title': { cs: 'Daňový dopad', en: 'Tax Impact' },
+  'tax.investmentAmount': { cs: 'Výše investice', en: 'Investment amount' },
+  'tax.investmentYears': { cs: 'Investiční horizont', en: 'Investment horizon' },
+  'tax.etf': { cs: 'ETF / Akcie', en: 'ETF / Stocks' },
+  'tax.stocks': { cs: 'Akcie', en: 'Stocks' },
+  'tax.realEstate': { cs: 'Nemovitost', en: 'Real Estate' },
+  'tax.crypto': { cs: 'Kryptoměny', en: 'Crypto' },
+  'tax.grossReturnRate': { cs: 'Hrubý výnos (% p.a.)', en: 'Gross return (% p.a.)' },
+  'tax.taxRate': { cs: 'Sazba daně z výnosu', en: 'Tax rate on gains' },
+  'tax.grossReturn': { cs: 'Hrubý výnos', en: 'Gross return' },
+  'tax.netReturn': { cs: 'Čistý výnos (p.a.)', en: 'Net return (p.a.)' },
+  'tax.afterTaxValue': { cs: 'Hodnota po zdanění', en: 'After-tax value' },
+  'tax.taxPaid': { cs: 'Zaplacená daň', en: 'Tax paid' },
+  'tax.taxLabel': { cs: 'daň', en: 'tax' },
+  'tax.grossVsNet': { cs: 'Hrubý vs čistý výnos', en: 'Gross vs Net Value' },
+  'tax.etfTaxNote': { cs: 'ČR: 15 % z kapitálových výnosů, osvobození po 3 letech držení (po 2025)', en: 'CZ: 15% capital gains tax, exempt after 3 years holding (post 2025)' },
+  'tax.realEstateTaxNote': { cs: 'ČR: 15 % z příjmu z pronájmu, osvobození po 5–10 letech držení', en: 'CZ: 15% rental income tax, exempt after 5–10 years holding' },
+  'tax.cryptoTaxNote': { cs: 'ČR: 15 % z kapitálových výnosů, osvobození po 3 letech (od 2025)', en: 'CZ: 15% capital gains tax, exempt after 3 years (from 2025)' },
+
+  // Share
+  'share.button': { cs: 'Sdílet', en: 'Share' },
+  'share.copied': { cs: 'Odkaz zkopírován do schránky!', en: 'Link copied to clipboard!' },
+  'share.copyManual': { cs: 'Zkopírujte odkaz:', en: 'Copy the link:' },
 
   // Common
   'common.year': { cs: 'Rok', en: 'Year' },
