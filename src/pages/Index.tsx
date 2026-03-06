@@ -20,7 +20,8 @@ const Index: React.FC = () => {
         <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           {activeTab === 0 && <MortgageCalculator />}
           {activeTab === 1 && <ETFCalculator />}
-          {activeTab === 2 && <ComparisonView />}
+          {activeTab === 2 && <DCACalculator />}
+          {activeTab === 3 && <ComparisonView />}
         </main>
         <footer className="py-8 border-t border-border/50 no-print">
           <div className="flex flex-col items-center gap-4">
