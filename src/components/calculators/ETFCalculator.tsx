@@ -68,7 +68,7 @@ const ETFCalculator: React.FC = () => {
           </div>
         </ResultCard>
 
-        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="etf" />
+        
 
         <div className="calculator-card">
           <h3 className="section-title mb-4">{t('etf.portfolioGrowth')}</h3>

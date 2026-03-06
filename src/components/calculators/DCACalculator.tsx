@@ -168,7 +168,7 @@ const DCACalculator: React.FC = () => {
           ))}
         </div>
 
-        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="dca" />
+        
 
         {results.length > 1 && (
           <div className="calculator-card">

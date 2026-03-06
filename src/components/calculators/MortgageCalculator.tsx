@@ -135,7 +135,7 @@ const MortgageCalculator: React.FC = () => {
               </div>
             </ResultCard>
 
-            <ExportButtons printRef={printRef} pdfData={pdfData} tabName="hypoteka" />
+            
 
             <div className="calculator-card">
               <h3 className="section-title mb-4">{t('mortgage.amortChart')}</h3>
