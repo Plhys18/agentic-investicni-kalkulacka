@@ -212,6 +212,8 @@ const DCACalculator: React.FC = () => {
             </ResponsiveContainer>
           </div>
         </div>
+
+        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="dca" />
       </div>
     </div>
   );

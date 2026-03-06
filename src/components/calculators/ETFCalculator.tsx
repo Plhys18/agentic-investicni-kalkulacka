@@ -125,6 +125,8 @@ const ETFCalculator: React.FC = () => {
             </div>
           )}
         </div>
+
+        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="etf" />
       </div>
     </div>
   );

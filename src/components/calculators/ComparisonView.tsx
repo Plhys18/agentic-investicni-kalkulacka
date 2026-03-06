@@ -145,6 +145,8 @@ const ComparisonView: React.FC = () => {
               </ResponsiveContainer>
             </div>
           </div>
+
+          <ExportButtons printRef={printRef} pdfData={pdfData} tabName="porovnani" />
         </div>
       </div>
     </div>

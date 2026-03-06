@@ -194,6 +194,8 @@ const FIRECalculator: React.FC = () => {
             </div>
           </div>
         </ResultCard>
+
+        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="fire" />
       </div>
     </div>
   );
