@@ -87,7 +87,7 @@ const ETFCalculator: React.FC = () => {
                 </defs>
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }} />
                 <Legend />
                 <Area type="monotone" dataKey="invested" name={t('etf.invested')} fill="url(#gradInvested)" stroke="#EAB308" strokeWidth={2} />
                 <Area type="monotone" dataKey="value" name={t('etf.totalValue')} fill="url(#gradValue)" stroke="#10b981" strokeWidth={2} />

@@ -136,7 +136,7 @@ const ComparisonView: React.FC = () => {
                 <LineChart data={timeline}>
                   <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                   <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                  <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }} />
                   <Legend />
                   <ReferenceLine y={downPayment} stroke="#9ca3af" strokeDasharray="3 3" />
                   <Line type="monotone" dataKey="mortgageNetWorth" name={t('comp.mortgageNetWorth')} stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: '#10b981' }} />
