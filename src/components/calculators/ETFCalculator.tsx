@@ -3,6 +3,7 @@ import SliderInput from '@/components/ui/SliderInput';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
 import { calculateCompoundInterest } from '@/lib/calculations';
+import { maxAmount, maxMonthly } from '@/lib/constants';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -45,8 +46,8 @@ const ETFCalculator: React.FC = () => {
       <div className="calculator-card space-y-5">
         <p className="section-title mb-2">{t('etf.params')}</p>
         <div className="space-y-4">
-          <SliderInput label={t('etf.initialInvestment')} value={initialInvestment} onChange={(v) => setETF({ initialInvestment: v })} min={0} max={500000000} step={50000} unit={currency} />
-          <SliderInput label={t('etf.monthlyContribution')} value={monthlyContribution} onChange={(v) => setETF({ monthlyContribution: v })} min={0} max={50000000} step={1000} unit={currency} />
+          <SliderInput label={t('etf.initialInvestment')} value={initialInvestment} onChange={(v) => setETF({ initialInvestment: v })} min={0} max={maxAmount(currency)} step={50000} unit={currency} />
+          <SliderInput label={t('etf.monthlyContribution')} value={monthlyContribution} onChange={(v) => setETF({ monthlyContribution: v })} min={0} max={maxMonthly(currency)} step={1000} unit={currency} />
           <SliderInput label={t('etf.annualReturn')} value={annualReturn} onChange={(v) => setETF({ annualReturn: v })} min={-10} max={30} step={0.1} unit="%" />
           <SliderInput label={t('etf.horizon')} value={years} onChange={(v) => setETF({ years: v })} min={1} max={50} step={1} unit={t('common.years')} />
         </div>

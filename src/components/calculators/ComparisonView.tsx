@@ -4,6 +4,7 @@ import InputField from '@/components/ui/InputField';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
 import { calculateComparison } from '@/lib/calculations';
+import { maxAmount, maxMonthly } from '@/lib/constants';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -54,12 +55,12 @@ const ComparisonView: React.FC = () => {
           <div className="border-t border-border/50 pt-4">
             <p className="section-title mb-4">{t('comp.propertyParams')}</p>
             <div className="space-y-4">
-              <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={0} max={500000000} step={100000} unit={currency} />
+              <SliderInput label={t('mortgage.propertyPrice')} value={propertyPrice} onChange={(v) => setMortgage({ propertyPrice: v })} min={0} max={maxAmount(currency)} step={100000} unit={currency} />
               <SliderInput label={t('mortgage.downPayment')} value={downPayment} onChange={(v) => setMortgage({ downPayment: Math.min(v, propertyPrice) })} min={0} max={propertyPrice} step={50000} unit={currency} />
               <SliderInput label={t('mortgage.interestRate')} value={interestRate} onChange={(v) => setMortgage({ interestRate: v })} min={0.1} max={15} step={0.1} unit="%" />
               <SliderInput label={t('mortgage.loanTerm')} value={loanTerm} onChange={(v) => setMortgage({ loanTerm: v })} min={1} max={40} step={1} unit={t('common.years')} />
-              <InputField label={t('mortgage.monthlyRent')} value={monthlyRent} onChange={(v) => setMortgage({ monthlyRent: v })} min={0} max={50000000} step={500} unit={currency} />
-              <InputField label={t('mortgage.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setMortgage({ monthlyExpenses: v })} min={0} max={50000000} step={500} unit={currency} />
+              <InputField label={t('mortgage.monthlyRent')} value={monthlyRent} onChange={(v) => setMortgage({ monthlyRent: v })} min={0} max={maxMonthly(currency)} step={500} unit={currency} />
+              <InputField label={t('mortgage.monthlyExpenses')} value={monthlyExpenses} onChange={(v) => setMortgage({ monthlyExpenses: v })} min={0} max={maxMonthly(currency)} step={500} unit={currency} />
               <SliderInput label={t('mortgage.appreciation')} value={annualAppreciation} onChange={(v) => setMortgage({ annualAppreciation: v })} min={-5} max={15} step={0.1} unit="%" />
               <SliderInput label={t('mortgage.vacancy')} value={vacancyRate} onChange={(v) => setMortgage({ vacancyRate: v })} min={0} max={50} step={1} unit="%" />
             </div>
