@@ -26,6 +26,7 @@ const convertFn = (amount: number, from: Currency, to: Currency) => {
 const IndexInner: React.FC = () => {
   const { isDark, toggle } = useDarkMode();
   const [activeTab, setActiveTab] = useState(0);
+  const [showDevBanner, setShowDevBanner] = useState(true);
   const { t } = useLanguage();
   const { lang, setLang } = useLanguage();
   const { currency, setCurrency } = useCurrency();
