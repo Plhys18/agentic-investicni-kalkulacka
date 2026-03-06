@@ -24,7 +24,7 @@ const translations: Record<string, Record<Lang, string>> = {
   // Mortgage
   'mortgage.params': { cs: 'Parametry nemovitosti', en: 'Property parameters' },
   'mortgage.propertyPrice': { cs: 'Cena nemovitosti', en: 'Property price' },
-  'mortgage.downPayment': { cs: 'Vlastní zdroje (akontace)', en: 'Down payment' },
+  'mortgage.downPayment': { cs: 'Vlastní zdroje', en: 'Down payment' },
   'mortgage.loanAmount': { cs: 'Výše úvěru', en: 'Loan amount' },
   'mortgage.interestRate': { cs: 'Úroková sazba (% p.a.)', en: 'Interest rate (% p.a.)' },
   'mortgage.loanTerm': { cs: 'Doba splácení', en: 'Loan term' },

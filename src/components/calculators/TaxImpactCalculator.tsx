@@ -137,16 +137,16 @@ const TaxImpactCalculator: React.FC = () => {
                 <h3 className="font-bold text-foreground text-sm">{t(`tax.${s.id}`)}</h3>
               </div>
               <div className="space-y-2 overflow-hidden">
-                <div className="min-w-0">
+                <div className="min-w-0" title={fc(s.netValue)}>
                   <p className="text-xs text-muted-foreground">{t('tax.afterTaxValue')}</p>
                   <p className="text-lg md:text-xl font-black stat-value truncate" style={{ color: s.color }}>{fc(s.netValue)}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="min-w-0">
+                  <div className="min-w-0" title={fc(s.taxPaid)}>
                     <p className="text-[10px] text-muted-foreground">{t('tax.taxPaid')}</p>
                     <p className="text-xs md:text-sm font-bold text-red-500 stat-value truncate">{fc(s.taxPaid)}</p>
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0" title={formatPercent(s.netReturn)}>
                     <p className="text-[10px] text-muted-foreground">{t('tax.netReturn')}</p>
                     <p className="text-xs md:text-sm font-bold text-profit stat-value truncate">{formatPercent(s.netReturn)}</p>
                   </div>
