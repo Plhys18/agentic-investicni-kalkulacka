@@ -4,6 +4,7 @@ import InputField from '@/components/ui/InputField';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
 import { calculateComparison } from '@/lib/calculations';
+import { maxAmount, maxMonthly } from '@/lib/constants';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
