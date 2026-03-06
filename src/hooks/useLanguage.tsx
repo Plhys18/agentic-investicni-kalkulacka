@@ -10,7 +10,7 @@ interface LanguageContextType {
 
 const translations: Record<string, Record<Lang, string>> = {
   // Header
-  'app.title': { cs: 'Investiční Kalkulačka', en: 'Investment Calculator' },
+  'app.title': { cs: 'Finanční Kalkulačka', en: 'Financial Calculator' },
   'app.subtitle': { cs: 'Hypotéka vs. ETF — porovnejte své investice', en: 'Mortgage vs. ETF — compare your investments' },
 
   // Tabs
@@ -162,7 +162,7 @@ const translations: Record<string, Record<Lang, string>> = {
   'common.invested': { cs: 'Investováno', en: 'Invested' },
 
   // Footer
-  'footer.copyright': { cs: 'Vojta Žižka · Investiční Kalkulačka', en: 'Vojta Žižka · Investment Calculator' },
+  'footer.copyright': { cs: 'Vojta Žižka · Finanční Kalkulačka', en: 'Vojta Žižka · Financial Calculator' },
 };
 
 const LanguageContext = createContext<LanguageContextType>({
