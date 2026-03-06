@@ -26,6 +26,7 @@ const convertFn = (amount: number, from: Currency, to: Currency) => {
 const IndexInner: React.FC = () => {
   const { isDark, toggle } = useDarkMode();
   const [activeTab, setActiveTab] = useState(0);
+  const [showDevBanner, setShowDevBanner] = useState(true);
   const { t } = useLanguage();
   const { lang, setLang } = useLanguage();
   const { currency, setCurrency } = useCurrency();
@@ -40,6 +41,14 @@ const IndexInner: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {showDevBanner && (
+        <div className="bg-destructive text-destructive-foreground no-print">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <p className="text-sm font-bold">{t('disclaimer.dev')}</p>
+            <button onClick={() => setShowDevBanner(false)} className="shrink-0 text-xs font-bold opacity-80 hover:opacity-100 px-2 py-1 rounded bg-destructive-foreground/20">✕</button>
+          </div>
+        </div>
+      )}
       <Header isDark={isDark} toggle={toggle} />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -81,6 +90,7 @@ const IndexInner: React.FC = () => {
             </a>
           </div>
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {t('footer.copyright')}</p>
+          <p className="text-[10px] text-muted-foreground/70 max-w-xl text-center leading-relaxed mt-2">{t('disclaimer.finance')}</p>
         </div>
       </footer>
     </div>

@@ -139,6 +139,10 @@ const translations: Record<string, Record<Lang, string>> = {
   'tax.realEstateTaxNote': { cs: 'ČR: 15 % z příjmu z pronájmu, osvobození po 5–10 letech držení', en: 'CZ: 15% rental income tax, exempt after 5–10 years holding' },
   'tax.cryptoTaxNote': { cs: 'ČR: 15 % z kapitálových výnosů, osvobození po 3 letech (od 2025)', en: 'CZ: 15% capital gains tax, exempt after 3 years (from 2025)' },
 
+  // Disclaimers
+  'disclaimer.dev': { cs: '⚠️ TOTO NENÍ OFICIÁLNÍ STRÁNKA — jedná se pouze o DEMO aplikaci ve vývoji, která dosud neprošla právní kontrolou.', en: '⚠️ THIS IS NOT AN OFFICIAL WEBSITE — this is only a DEMO application in development that has not yet undergone legal review.' },
+  'disclaimer.finance': { cs: 'Tato kalkulačka slouží pouze k informativním a vzdělávacím účelům. Nepředstavuje finanční, investiční, daňové ani právní poradenství. Před jakýmkoli investičním rozhodnutím se poraďte s kvalifikovaným finančním poradcem. Výsledky jsou orientační a mohou se lišit od skutečnosti.', en: 'This calculator is for informational and educational purposes only. It does not constitute financial, investment, tax, or legal advice. Consult a qualified financial advisor before making any investment decisions. Results are approximate and may differ from actual outcomes.' },
+
   // Share
   'share.button': { cs: 'Sdílet', en: 'Share' },
   'share.copied': { cs: 'Odkaz zkopírován do schránky!', en: 'Link copied to clipboard!' },
