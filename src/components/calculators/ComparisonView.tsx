@@ -127,7 +127,7 @@ const ComparisonView: React.FC = () => {
             </ResultCard>
           </div>
 
-          <ExportButtons printRef={printRef} pdfData={pdfData} tabName="porovnani" />
+          
 
           <div className="calculator-card">
             <h3 className="section-title mb-4">{t('comp.timeComparison')}</h3>
@@ -145,6 +145,8 @@ const ComparisonView: React.FC = () => {
               </ResponsiveContainer>
             </div>
           </div>
+
+          <ExportButtons printRef={printRef} pdfData={pdfData} tabName="porovnani" />
         </div>
       </div>
     </div>
