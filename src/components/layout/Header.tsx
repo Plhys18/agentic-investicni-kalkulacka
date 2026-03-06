@@ -1,12 +1,17 @@
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
+import { useCurrency, type Currency } from '@/hooks/useCurrency';
 
 interface HeaderProps {
   isDark: boolean;
   toggle: () => void;
 }
 
+const currencies: Currency[] = ['CZK', 'EUR', 'USD'];
+
 const Header: React.FC<HeaderProps> = ({ isDark, toggle }) => {
+  const { currency, setCurrency } = useCurrency();
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-card/80 border-b border-border/50 no-print">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -23,13 +28,30 @@ const Header: React.FC<HeaderProps> = ({ isDark, toggle }) => {
             </p>
           </div>
         </div>
-        <button
-          onClick={toggle}
-          className="p-2.5 rounded-xl bg-secondary hover:bg-accent border border-border/50 transition-all duration-200 active:scale-95"
-          aria-label={isDark ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim'}
-        >
-          {isDark ? <Sun size={18} className="text-foreground" /> : <Moon size={18} className="text-foreground" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center rounded-xl border border-border/50 overflow-hidden bg-secondary">
+            {currencies.map((c) => (
+              <button
+                key={c}
+                onClick={() => setCurrency(c)}
+                className={`px-3 py-1.5 text-xs font-bold transition-all duration-200 ${
+                  currency === c
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={toggle}
+            className="p-2.5 rounded-xl bg-secondary hover:bg-accent border border-border/50 transition-all duration-200 active:scale-95"
+            aria-label={isDark ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim'}
+          >
+            {isDark ? <Sun size={18} className="text-foreground" /> : <Moon size={18} className="text-foreground" />}
+          </button>
+        </div>
       </div>
     </header>
   );
