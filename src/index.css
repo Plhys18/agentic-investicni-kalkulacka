@@ -2,74 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @layer base {
   :root {
-    --background: 220 25% 97%;
-    --foreground: 222 47% 11%;
+    --background: 45 100% 96%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 45 100% 51%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 45 30% 93%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 45 20% 93%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 45 50% 90%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 83% 53%;
+    --border: 45 20% 88%;
+    --input: 45 15% 88%;
+    --ring: 45 100% 51%;
     --radius: 0.75rem;
 
     --profit: 160 84% 39%;
     --loss: 0 84% 60%;
-    --primary-50: 214 100% 97%;
-    --primary-100: 214 95% 93%;
-    --primary-500: 217 91% 60%;
-    --primary-600: 221 83% 53%;
-    --primary-700: 224 76% 48%;
-    --blue-50: 214 100% 97%;
-    --gradient-start: 221 83% 53%;
-    --gradient-end: 250 83% 60%;
+    --chart-blue: 217 91% 60%;
+    --chart-green: 160 84% 39%;
+    --chart-red: 0 84% 60%;
+    --chart-gray: 0 0% 42%;
+
+    --btn-bg: 0 0% 9%;
+    --btn-fg: 0 0% 100%;
   }
 
   .dark {
-    --background: 224 30% 8%;
-    --foreground: 210 40% 96%;
-    --card: 224 25% 12%;
-    --card-foreground: 210 40% 96%;
-    --popover: 224 25% 12%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 224 20% 18%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 224 20% 16%;
-    --muted-foreground: 218 15% 55%;
-    --accent: 224 20% 18%;
-    --accent-foreground: 210 40% 96%;
+    --background: 0 0% 7%;
+    --foreground: 45 20% 95%;
+    --card: 0 0% 11%;
+    --card-foreground: 45 20% 95%;
+    --popover: 0 0% 11%;
+    --popover-foreground: 45 20% 95%;
+    --primary: 45 100% 51%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 45 20% 95%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 45 20% 95%;
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 96%;
-    --border: 224 20% 20%;
-    --input: 224 20% 22%;
-    --ring: 217 91% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 20%;
+    --ring: 45 100% 51%;
 
     --profit: 160 84% 39%;
     --loss: 0 72% 51%;
-    --primary-50: 224 25% 14%;
-    --primary-100: 224 25% 18%;
-    --primary-500: 217 91% 60%;
-    --primary-600: 221 83% 53%;
-    --primary-700: 224 76% 48%;
-    --blue-50: 224 25% 16%;
-    --gradient-start: 221 83% 53%;
-    --gradient-end: 250 83% 60%;
+    --chart-blue: 217 91% 60%;
+    --chart-green: 160 84% 39%;
+    --chart-red: 0 84% 60%;
+    --chart-gray: 0 0% 50%;
+
+    --btn-bg: 45 100% 51%;
+    --btn-fg: 0 0% 9%;
   }
 
   * {
@@ -84,13 +82,13 @@
 
 @layer components {
   .calculator-card {
-    @apply bg-card text-card-foreground rounded-xl shadow-sm border border-border/50 p-6
-           hover:shadow-md transition-shadow duration-300;
+    @apply bg-card text-card-foreground rounded-2xl p-6
+           border border-border/60 shadow-sm;
   }
 
   .input-field {
-    @apply w-full px-4 py-2.5 border border-input rounded-lg
-           focus:ring-2 focus:ring-primary/30 focus:border-primary
+    @apply w-full px-4 py-2.5 border border-input rounded-xl
+           focus:ring-2 focus:ring-primary/40 focus:border-primary
            bg-card text-foreground transition-all duration-200
            placeholder:text-muted-foreground;
     font-family: 'JetBrains Mono', monospace;
@@ -98,53 +96,60 @@
   }
 
   .btn-primary {
-    @apply px-5 py-2.5 rounded-lg font-medium text-sm
+    @apply px-5 py-2.5 rounded-full font-semibold text-sm
            transition-all duration-200 shadow-sm
-           hover:shadow-md active:scale-[0.98];
-    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
-    color: hsl(var(--primary-foreground));
+           hover:shadow-md active:scale-[0.97];
+    background: hsl(var(--btn-bg));
+    color: hsl(var(--btn-fg));
   }
 
   .btn-primary:hover {
-    filter: brightness(1.1);
+    opacity: 0.9;
   }
 
   .btn-secondary {
-    @apply px-5 py-2.5 rounded-lg font-medium text-sm
+    @apply px-5 py-2.5 rounded-full font-semibold text-sm
            bg-secondary text-secondary-foreground border border-border
            hover:bg-accent transition-all duration-200;
   }
 
   .result-card {
-    @apply rounded-xl p-6 shadow-sm border border-border/30;
-    background: linear-gradient(135deg, hsl(var(--primary-50)), hsl(var(--blue-50)));
+    @apply rounded-2xl p-6 border border-primary/20;
+    background: linear-gradient(135deg, hsl(45 100% 96%), hsl(45 60% 92%));
   }
 
-  .result-card-highlighted {
-    @apply result-card ring-2 ring-offset-2 ring-offset-background;
+  .dark .result-card {
+    background: linear-gradient(135deg, hsl(0 0% 13%), hsl(0 0% 16%));
+    border-color: hsl(var(--border));
   }
 
-  /* Custom range slider */
+  /* Custom range slider — yellow/gold track */
   input[type="range"] {
     @apply appearance-none w-full h-1.5 rounded-full cursor-pointer;
-    background: linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) var(--range-progress, 50%), hsl(var(--border)) var(--range-progress, 50%), hsl(var(--border)) 100%);
+    background: linear-gradient(
+      to right,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary)) var(--range-progress, 50%),
+      hsl(var(--border)) var(--range-progress, 50%),
+      hsl(var(--border)) 100%
+    );
   }
 
   input[type="range"]::-webkit-slider-thumb {
     @apply appearance-none w-5 h-5 rounded-full cursor-pointer shadow-md border-2;
-    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+    background: hsl(var(--primary));
     border-color: hsl(var(--card));
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 6px hsl(var(--primary) / 0.15);
+    transform: scale(1.25);
+    box-shadow: 0 0 0 6px hsl(var(--primary) / 0.2);
   }
 
   input[type="range"]::-moz-range-thumb {
     @apply w-5 h-5 rounded-full cursor-pointer shadow-md border-2;
-    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+    background: hsl(var(--primary));
     border-color: hsl(var(--card));
   }
 
@@ -154,35 +159,32 @@
   }
 
   .section-title {
-    @apply text-xs font-semibold uppercase tracking-wider text-muted-foreground;
+    @apply text-xs font-bold uppercase tracking-widest text-muted-foreground;
+  }
+
+  .highlight-tag {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
+    background: hsl(var(--primary) / 0.15);
+    color: hsl(var(--foreground));
   }
 }
 
-/* Smooth scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
   border-radius: 3px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
 }
 
 @media print {
-  .no-print {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
-  }
+  .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
 }

@@ -8,9 +8,7 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       colors: {
@@ -22,11 +20,6 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          50: "hsl(var(--primary-50))",
-          100: "hsl(var(--primary-100))",
-          500: "hsl(var(--primary-500))",
-          600: "hsl(var(--primary-600))",
-          700: "hsl(var(--primary-700))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -54,7 +47,6 @@ export default {
         },
         profit: "hsl(var(--profit))",
         loss: "hsl(var(--loss))",
-        "blue-50": "hsl(var(--blue-50))",
       },
       borderRadius: {
         lg: "var(--radius)",

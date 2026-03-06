@@ -26,15 +26,14 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab, onTabChange }) => {
                 onClick={() => onTabChange(i)}
                 className={`relative flex items-center gap-2 px-5 py-3.5 text-sm lg:text-base font-medium transition-all duration-200 ${
                   isActive
-                    ? 'text-primary font-semibold'
+                    ? 'text-foreground font-bold'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon size={18} className={isActive ? 'text-primary' : ''} />
+                <Icon size={18} />
                 <span className="hidden sm:inline">{tab.label}</span>
                 {isActive && (
-                  <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full"
-                        style={{ background: 'linear-gradient(90deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)))' }} />
+                  <span className="absolute bottom-0 left-3 right-3 h-[3px] rounded-full bg-primary" />
                 )}
               </button>
             );

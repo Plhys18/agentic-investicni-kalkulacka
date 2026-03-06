@@ -54,7 +54,6 @@ const ComparisonView: React.FC = () => {
             <SliderInput label="Období porovnání" value={comparisonYears} onChange={setComparisonYears} min={1} max={40} step={1} unit="let" />
             <SliderInput label="Očekávaný roční výnos ETF" value={etfReturn} onChange={setEtfReturn} min={1} max={30} step={0.1} unit="%" />
           </div>
-
           <div className="border-t border-border/50 pt-4">
             <p className="section-title mb-4">Parametry nemovitosti</p>
             <div className="space-y-4">
@@ -72,18 +71,18 @@ const ComparisonView: React.FC = () => {
 
         <div className="space-y-6" ref={printRef}>
           {/* Winner banner */}
-          <div className={`rounded-xl p-5 border shadow-sm flex items-center gap-4 ${
+          <div className={`rounded-2xl p-5 flex items-center gap-4 border ${
             result.winner === 'mortgage'
-              ? 'bg-gradient-to-r from-[hsl(160,84%,39%,0.08)] to-[hsl(160,84%,39%,0.02)] border-profit/20'
-              : 'bg-gradient-to-r from-[hsl(217,91%,60%,0.08)] to-[hsl(217,91%,60%,0.02)] border-primary/20'
+              ? 'bg-profit/5 border-profit/20'
+              : 'bg-primary/10 border-primary/30'
           }`}>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
-              result.winner === 'mortgage' ? 'bg-profit/10' : 'bg-primary/10'
+              result.winner === 'mortgage' ? 'bg-profit/15' : 'bg-primary/20'
             }`}>
               <Trophy size={22} className={result.winner === 'mortgage' ? 'text-profit' : 'text-primary'} />
             </div>
             <div>
-              <p className="font-bold text-foreground text-lg">
+              <p className="font-black text-foreground text-lg tracking-tight">
                 {result.winner === 'mortgage'
                   ? `Nemovitost vyhrává o ${formatCurrency(Math.abs(result.difference))}!`
                   : `ETF vyhrává o ${formatCurrency(Math.abs(result.difference))}!`}
@@ -93,12 +92,12 @@ const ComparisonView: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ResultCard className={result.winner === 'mortgage' ? 'ring-2 ring-profit/50 ring-offset-2 ring-offset-background' : ''}>
+            <ResultCard className={result.winner === 'mortgage' ? 'ring-2 ring-profit/40 ring-offset-2 ring-offset-background' : ''}>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-profit/10 flex items-center justify-center">
                   <Home size={16} className="text-profit" />
                 </div>
-                <h3 className="font-semibold text-foreground text-sm">Investice do nemovitosti</h3>
+                <h3 className="font-bold text-foreground text-sm">Investice do nemovitosti</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
                 <Row label="Hodnota nemovitosti" value={formatCurrency(result.mortgage.propertyValue)} />
@@ -106,19 +105,19 @@ const ComparisonView: React.FC = () => {
                 <Row label="Kumulativní cash flow" value={formatCurrency(result.mortgage.cumulativeCashFlow)} className={result.mortgage.cumulativeCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
                 <div className="border-t border-border/30 pt-2.5">
                   <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
-                  <p className="text-2xl font-extrabold text-foreground">{formatCurrency(result.mortgage.netWorth)}</p>
+                  <p className="text-2xl font-black text-foreground tracking-tight">{formatCurrency(result.mortgage.netWorth)}</p>
                 </div>
                 <Row label="ROI" value={formatPercent(result.mortgage.roi)} />
                 <Row label="Roční ROI" value={formatPercent(result.mortgage.annualROI)} />
               </div>
             </ResultCard>
 
-            <ResultCard className={result.winner === 'etf' ? 'ring-2 ring-primary/50 ring-offset-2 ring-offset-background' : ''}>
+            <ResultCard className={result.winner === 'etf' ? 'ring-2 ring-primary/40 ring-offset-2 ring-offset-background' : ''}>
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center">
                   <TrendingUp size={16} className="text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground text-sm">Investice do ETF</h3>
+                <h3 className="font-bold text-foreground text-sm">Investice do ETF</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
                 <Row label="Celková hodnota" value={formatCurrency(result.etf.totalValue)} />
@@ -126,7 +125,7 @@ const ComparisonView: React.FC = () => {
                 <Row label="Výnosy" value={formatCurrency(result.etf.earnings)} className="text-profit" />
                 <div className="border-t border-border/30 pt-2.5">
                   <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
-                  <p className="text-2xl font-extrabold text-foreground">{formatCurrency(result.etf.totalValue)}</p>
+                  <p className="text-2xl font-black text-foreground tracking-tight">{formatCurrency(result.etf.totalValue)}</p>
                 </div>
                 <Row label="ROI" value={formatPercent(result.etf.roi)} />
                 <Row label="Roční ROI" value={formatPercent(result.etf.annualROI)} />
@@ -143,11 +142,11 @@ const ComparisonView: React.FC = () => {
                 <LineChart data={timeline}>
                   <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                   <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                  <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                   <Legend />
-                  <ReferenceLine y={downPayment} stroke="#6b7280" strokeDasharray="3 3" />
-                  <Line type="monotone" dataKey="mortgageNetWorth" name="Nemovitost (čisté jmění)" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="etfValue" name="ETF (hodnota portfolia)" stroke="#3b82f6" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <ReferenceLine y={downPayment} stroke="#9ca3af" strokeDasharray="3 3" />
+                  <Line type="monotone" dataKey="mortgageNetWorth" name="Nemovitost (čisté jmění)" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: '#10b981' }} />
+                  <Line type="monotone" dataKey="etfValue" name="ETF (hodnota portfolia)" stroke="#EAB308" strokeWidth={2.5} dot={{ r: 3, fill: '#EAB308' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
