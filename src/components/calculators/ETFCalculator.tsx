@@ -5,10 +5,14 @@ import ExportButtons from '@/components/ui/ExportButtons';
 import { ETF_DEFAULTS } from '@/lib/constants';
 import { calculateCompoundInterest } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
+import { useCurrency } from '@/hooks/useCurrency';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const ETFCalculator: React.FC = () => {
+  const { currency } = useCurrency();
+  const fc = (n: number) => formatCurrency(n, currency);
+
   const [initialInvestment, setInitialInvestment] = useState(ETF_DEFAULTS.initialInvestment);
   const [monthlyContribution, setMonthlyContribution] = useState(ETF_DEFAULTS.monthlyContribution);
   const [annualReturn, setAnnualReturn] = useState(ETF_DEFAULTS.annualReturn);
@@ -22,15 +26,15 @@ const ETFCalculator: React.FC = () => {
   const pdfData = {
     title: 'ETF Kalkulačka',
     inputs: {
-      'Počáteční investice': formatCurrency(initialInvestment),
-      'Měsíční vklad': formatCurrency(monthlyContribution),
+      'Počáteční investice': fc(initialInvestment),
+      'Měsíční vklad': fc(monthlyContribution),
       'Očekávaný roční výnos': formatPercent(annualReturn),
       'Investiční horizont': `${years} let`,
     },
     results: {
-      'Celková hodnota': formatCurrency(result.finalValue),
-      'Celkem investováno': formatCurrency(result.totalInvested),
-      'Celkový výnos': formatCurrency(result.totalEarnings),
+      'Celková hodnota': fc(result.finalValue),
+      'Celkem investováno': fc(result.totalInvested),
+      'Celkový výnos': fc(result.totalEarnings),
       'ROI': formatPercent(result.roi),
       'Roční ROI (CAGR)': formatPercent(cagr),
     },
@@ -41,8 +45,8 @@ const ETFCalculator: React.FC = () => {
       <div className="calculator-card space-y-5">
         <p className="section-title mb-2">Parametry ETF investice</p>
         <div className="space-y-4">
-          <SliderInput label="Počáteční investice" value={initialInvestment} onChange={setInitialInvestment} min={0} max={30000000} step={50000} unit="CZK" />
-          <SliderInput label="Měsíční vklad" value={monthlyContribution} onChange={setMonthlyContribution} min={0} max={500000} step={1000} unit="CZK" />
+          <SliderInput label="Počáteční investice" value={initialInvestment} onChange={setInitialInvestment} min={0} max={30000000} step={50000} unit={currency} />
+          <SliderInput label="Měsíční vklad" value={monthlyContribution} onChange={setMonthlyContribution} min={0} max={500000} step={1000} unit={currency} />
           <SliderInput label="Očekávaný roční výnos" value={annualReturn} onChange={setAnnualReturn} min={-10} max={30} step={0.1} unit="%" />
           <SliderInput label="Investiční horizont" value={years} onChange={setYears} min={1} max={50} step={1} unit="let" />
         </div>
@@ -53,11 +57,11 @@ const ETFCalculator: React.FC = () => {
           <div className="space-y-4">
             <div>
               <p className="section-title mb-1">Celková hodnota</p>
-              <p className="text-4xl font-black text-profit stat-value tracking-tight">{formatCurrency(result.finalValue)}</p>
+              <p className="text-4xl font-black text-profit stat-value tracking-tight">{fc(result.finalValue)}</p>
             </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-              <StatItem label="Celkem investováno" value={formatCurrency(result.totalInvested)} />
-              <StatItem label="Celkový výnos" value={formatCurrency(result.totalEarnings)} className="text-profit" />
+              <StatItem label="Celkem investováno" value={fc(result.totalInvested)} />
+              <StatItem label="Celkový výnos" value={fc(result.totalEarnings)} className="text-profit" />
               <StatItem label="ROI" value={formatPercent(result.roi)} />
               <StatItem label="Roční ROI (CAGR)" value={formatPercent(cagr)} />
             </div>
@@ -83,7 +87,7 @@ const ETFCalculator: React.FC = () => {
                 </defs>
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                 <Legend />
                 <Area type="monotone" dataKey="invested" name="Investováno" fill="url(#gradInvested)" stroke="#EAB308" strokeWidth={2} />
                 <Area type="monotone" dataKey="value" name="Celková hodnota" fill="url(#gradValue)" stroke="#10b981" strokeWidth={2} />
@@ -111,9 +115,9 @@ const ETFCalculator: React.FC = () => {
                   {result.timeline.map((row) => (
                     <tr key={row.year} className="border-t border-border/30 hover:bg-primary/5 transition-colors">
                       <td className="px-3 py-1.5">{row.year}</td>
-                      <td className="px-3 py-1.5 text-right">{formatCurrency(row.value)}</td>
-                      <td className="px-3 py-1.5 text-right">{formatCurrency(row.invested)}</td>
-                      <td className="px-3 py-1.5 text-right text-profit">{formatCurrency(row.earnings)}</td>
+                      <td className="px-3 py-1.5 text-right">{fc(row.value)}</td>
+                      <td className="px-3 py-1.5 text-right">{fc(row.invested)}</td>
+                      <td className="px-3 py-1.5 text-right text-profit">{fc(row.earnings)}</td>
                     </tr>
                   ))}
                 </tbody>
