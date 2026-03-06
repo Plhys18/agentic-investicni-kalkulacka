@@ -154,7 +154,7 @@ const MortgageCalculator: React.FC = () => {
                     </defs>
                     <XAxis dataKey="rok" tick={{ fontSize: 12 }} />
                     <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                    <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }} />
                     <Legend />
                     <Area type="monotone" dataKey="jistina" name={t('mortgage.principal')} stackId="1" fill="url(#gradPrincipal)" stroke="#EAB308" strokeWidth={2} />
                     <Area type="monotone" dataKey="urok" name={t('mortgage.interest')} stackId="1" fill="url(#gradInterest)" stroke="#ef4444" strokeWidth={2} />

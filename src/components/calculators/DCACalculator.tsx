@@ -178,7 +178,7 @@ const DCACalculator: React.FC = () => {
                 <BarChart data={barData} layout="vertical" barCategoryGap="20%">
                   <XAxis type="number" tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
                   <YAxis type="category" dataKey="name" tick={{ fontSize: 13, fontWeight: 600 }} width={90} />
-                  <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                  <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }} />
                   <Bar dataKey="value" name={t('common.totalValue')} radius={[0, 8, 8, 0]}>
                     {barData.map((d, i) => <Cell key={i} fill={d.color} fillOpacity={0.85} />)}
                   </Bar>
@@ -203,7 +203,7 @@ const DCACalculator: React.FC = () => {
                 </defs>
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }} />
                 <Legend />
                 {results.map((r) => (
                   <Area key={r.asset.id} type="monotone" dataKey={r.asset.id} name={getLabel(r.asset)} fill={`url(#grad-${r.asset.id})`} stroke={r.asset.color} strokeWidth={2.5} />

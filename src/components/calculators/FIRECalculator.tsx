@@ -163,7 +163,7 @@ const FIRECalculator: React.FC = () => {
                 <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
                 <Tooltip
                   formatter={(value: number, name: string) => [fc(value), name]}
-                  contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }}
+                  contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}
                 />
                 <Legend />
                 <ReferenceLine y={results.fireTarget} stroke="#F97316" strokeDasharray="6 4" strokeWidth={2} label={{ value: `FIRE: ${fc(results.fireTarget)}`, position: 'right', fontSize: 11, fill: '#F97316' }} />
