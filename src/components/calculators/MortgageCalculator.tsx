@@ -164,6 +164,8 @@ const MortgageCalculator: React.FC = () => {
               </div>
             </div>
 
+            <ExportButtons printRef={printRef} pdfData={pdfData} tabName="hypoteka" />
+
             <div className="calculator-card">
               <button onClick={() => setShowTable(!showTable)} className="btn-secondary flex items-center gap-2 w-full justify-center">
                 {showTable ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -194,8 +196,6 @@ const MortgageCalculator: React.FC = () => {
                 </div>
               )}
             </div>
-
-            <ExportButtons printRef={printRef} pdfData={pdfData} tabName="hypoteka" />
           </>
         )}
       </div>
