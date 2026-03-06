@@ -6,10 +6,14 @@ import ExportButtons from '@/components/ui/ExportButtons';
 import { MORTGAGE_DEFAULTS } from '@/lib/constants';
 import { calculateMortgagePayment } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
+import { useCurrency } from '@/hooks/useCurrency';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const MortgageCalculator: React.FC = () => {
+  const { currency } = useCurrency();
+  const fc = (n: number) => formatCurrency(n, currency);
+
   const [propertyPrice, setPropertyPrice] = useState(MORTGAGE_DEFAULTS.propertyPrice);
   const [downPayment, setDownPayment] = useState(MORTGAGE_DEFAULTS.downPayment);
   const [interestRate, setInterestRate] = useState(MORTGAGE_DEFAULTS.interestRate);
@@ -60,17 +64,17 @@ const MortgageCalculator: React.FC = () => {
   const pdfData = {
     title: 'Hypotéka',
     inputs: {
-      'Cena nemovitosti': formatCurrency(propertyPrice),
-      'Vlastní zdroje': formatCurrency(downPayment),
-      'Výše úvěru': formatCurrency(loanAmount),
+      'Cena nemovitosti': fc(propertyPrice),
+      'Vlastní zdroje': fc(downPayment),
+      'Výše úvěru': fc(loanAmount),
       'Úroková sazba': formatPercent(interestRate),
       'Doba splácení': `${loanTerm} let`,
     },
     results: {
-      'Měsíční splátka': formatCurrency(result.monthlyPayment),
-      'Celkem zaplaceno': formatCurrency(result.totalPaid),
-      'Celkem na úrocích': formatCurrency(result.totalInterest),
-      'Měsíční cash flow': formatCurrency(monthlyCashFlow),
+      'Měsíční splátka': fc(result.monthlyPayment),
+      'Celkem zaplaceno': fc(result.totalPaid),
+      'Celkem na úrocích': fc(result.totalInterest),
+      'Měsíční cash flow': fc(monthlyCashFlow),
     },
   };
 
@@ -79,14 +83,14 @@ const MortgageCalculator: React.FC = () => {
       <div className="calculator-card space-y-5">
         <p className="section-title mb-4">Parametry nemovitosti</p>
         <div className="space-y-4">
-          <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
-          <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
+          <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit={currency} />
+          <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit={currency} />
         </div>
 
         <div className="rounded-xl p-3.5 space-y-1.5 bg-primary/10">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Výše úvěru</span>
-            <span className="font-bold text-foreground stat-value">{formatCurrency(loanAmount)}</span>
+            <span className="font-bold text-foreground stat-value">{fc(loanAmount)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">LTV</span>
@@ -102,8 +106,8 @@ const MortgageCalculator: React.FC = () => {
         <div className="border-t border-border/50 pt-4">
           <p className="section-title mb-4">Příjmy a náklady</p>
           <div className="space-y-4">
-            <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit="CZK" />
-            <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit="CZK" />
+            <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit={currency} />
+            <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit={currency} />
             <SliderInput label="Roční zhodnocení" value={annualAppreciation} onChange={setAnnualAppreciation} min={-5} max={15} step={0.1} unit="%" />
             <SliderInput label="Míra neobsazenosti" value={vacancyRate} onChange={setVacancyRate} min={0} max={50} step={1} unit="%" />
           </div>
@@ -122,16 +126,16 @@ const MortgageCalculator: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <p className="section-title mb-1">Měsíční splátka</p>
-                  <p className="text-4xl font-black text-foreground stat-value tracking-tight">{formatCurrency(result.monthlyPayment)}</p>
+                  <p className="text-4xl font-black text-foreground stat-value tracking-tight">{fc(result.monthlyPayment)}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                  <StatItem label="Celkem zaplaceno" value={formatCurrency(result.totalPaid)} />
-                  <StatItem label="Celkem na úrocích" value={formatCurrency(result.totalInterest)} className="text-loss" />
+                  <StatItem label="Celkem zaplaceno" value={fc(result.totalPaid)} />
+                  <StatItem label="Celkem na úrocích" value={fc(result.totalInterest)} className="text-loss" />
                   <StatItem label="Poměr úrok/jistina" value={`${formatPercent(interestRatio, 0)} / ${formatPercent(principalRatio, 0)}`} />
                 </div>
                 <div className="border-t border-border/30 pt-3 grid grid-cols-2 gap-x-6">
-                  <StatItem label="Měsíční cash flow" value={formatCurrency(monthlyCashFlow)} className={monthlyCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
-                  <StatItem label="Roční cash flow" value={formatCurrency(annualCashFlow)} className={annualCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
+                  <StatItem label="Měsíční cash flow" value={fc(monthlyCashFlow)} className={monthlyCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
+                  <StatItem label="Roční cash flow" value={fc(annualCashFlow)} className={annualCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
                 </div>
               </div>
             </ResultCard>
@@ -155,7 +159,7 @@ const MortgageCalculator: React.FC = () => {
                     </defs>
                     <XAxis dataKey="rok" tick={{ fontSize: 12 }} />
                     <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                    <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                     <Legend />
                     <Area type="monotone" dataKey="jistina" name="Jistina" stackId="1" fill="url(#gradPrincipal)" stroke="#EAB308" strokeWidth={2} />
                     <Area type="monotone" dataKey="urok" name="Úrok" stackId="1" fill="url(#gradInterest)" stroke="#ef4444" strokeWidth={2} />
@@ -183,12 +187,12 @@ const MortgageCalculator: React.FC = () => {
                     <tbody className="stat-value">
                       {tableRows.truncated ? (
                         <>
-                          {(tableRows as any).first.map((row: any) => <TableRow key={row.month} row={row} />)}
+                          {(tableRows as any).first.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)}
                           <tr><td colSpan={5} className="text-center py-3 text-muted-foreground font-sans">⋯</td></tr>
-                          {(tableRows as any).last.map((row: any) => <TableRow key={row.month} row={row} />)}
+                          {(tableRows as any).last.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)}
                         </>
                       ) : (
-                        (tableRows as any).rows?.map((row: any) => <TableRow key={row.month} row={row} />)
+                        (tableRows as any).rows?.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)
                       )}
                     </tbody>
                   </table>
@@ -209,13 +213,13 @@ const StatItem: React.FC<{ label: string; value: string; className?: string }> =
   </div>
 );
 
-const TableRow: React.FC<{ row: any }> = ({ row }) => (
+const TableRow: React.FC<{ row: any; fc: (n: number) => string }> = ({ row, fc }) => (
   <tr className="border-t border-border/30 hover:bg-primary/5 transition-colors">
     <td className="px-3 py-1.5">{row.month}</td>
-    <td className="px-3 py-1.5 text-right">{formatCurrency(row.payment)}</td>
-    <td className="px-3 py-1.5 text-right">{formatCurrency(row.principal)}</td>
-    <td className="px-3 py-1.5 text-right">{formatCurrency(row.interest)}</td>
-    <td className="px-3 py-1.5 text-right">{formatCurrency(row.balance)}</td>
+    <td className="px-3 py-1.5 text-right">{fc(row.payment)}</td>
+    <td className="px-3 py-1.5 text-right">{fc(row.principal)}</td>
+    <td className="px-3 py-1.5 text-right">{fc(row.interest)}</td>
+    <td className="px-3 py-1.5 text-right">{fc(row.balance)}</td>
   </tr>
 );
 

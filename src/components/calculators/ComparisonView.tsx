@@ -6,10 +6,14 @@ import ExportButtons from '@/components/ui/ExportButtons';
 import { MORTGAGE_DEFAULTS, COMPARISON_DEFAULTS } from '@/lib/constants';
 import { calculateComparison } from '@/lib/calculations';
 import { formatCurrency, formatPercent } from '@/lib/formatters';
+import { useCurrency } from '@/hooks/useCurrency';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Home, TrendingUp, Trophy } from 'lucide-react';
 
 const ComparisonView: React.FC = () => {
+  const { currency } = useCurrency();
+  const fc = (n: number) => formatCurrency(n, currency);
+
   const [propertyPrice, setPropertyPrice] = useState(MORTGAGE_DEFAULTS.propertyPrice);
   const [downPayment, setDownPayment] = useState(MORTGAGE_DEFAULTS.downPayment);
   const [interestRate, setInterestRate] = useState(MORTGAGE_DEFAULTS.interestRate);
@@ -32,16 +36,16 @@ const ComparisonView: React.FC = () => {
   const pdfData = {
     title: 'Porovnání',
     inputs: {
-      'Cena nemovitosti': formatCurrency(propertyPrice),
-      'Vlastní zdroje': formatCurrency(downPayment),
+      'Cena nemovitosti': fc(propertyPrice),
+      'Vlastní zdroje': fc(downPayment),
       'Období porovnání': `${comparisonYears} let`,
       'Výnos ETF': formatPercent(etfReturn),
     },
     results: {
-      'Nemovitost - čisté jmění': formatCurrency(result.mortgage.netWorth),
-      'ETF - celková hodnota': formatCurrency(result.etf.totalValue),
+      'Nemovitost - čisté jmění': fc(result.mortgage.netWorth),
+      'ETF - celková hodnota': fc(result.etf.totalValue),
       'Vítěz': result.winner === 'mortgage' ? 'Nemovitost' : 'ETF',
-      'Rozdíl': formatCurrency(Math.abs(result.difference)),
+      'Rozdíl': fc(Math.abs(result.difference)),
     },
   };
 
@@ -57,12 +61,12 @@ const ComparisonView: React.FC = () => {
           <div className="border-t border-border/50 pt-4">
             <p className="section-title mb-4">Parametry nemovitosti</p>
             <div className="space-y-4">
-              <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
-              <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
+              <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit={currency} />
+              <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit={currency} />
               <SliderInput label="Úroková sazba (% p.a.)" value={interestRate} onChange={setInterestRate} min={0.1} max={15} step={0.1} unit="%" />
               <SliderInput label="Doba splácení" value={loanTerm} onChange={setLoanTerm} min={1} max={40} step={1} unit="let" />
-              <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit="CZK" />
-              <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit="CZK" />
+              <InputField label="Měsíční nájem (příjem)" value={monthlyRent} onChange={setMonthlyRent} min={0} max={500000} step={500} unit={currency} />
+              <InputField label="Měsíční náklady" value={monthlyExpenses} onChange={setMonthlyExpenses} min={0} max={200000} step={500} unit={currency} />
               <SliderInput label="Roční zhodnocení" value={annualAppreciation} onChange={setAnnualAppreciation} min={-5} max={15} step={0.1} unit="%" />
               <SliderInput label="Míra neobsazenosti" value={vacancyRate} onChange={setVacancyRate} min={0} max={50} step={1} unit="%" />
             </div>
@@ -70,7 +74,6 @@ const ComparisonView: React.FC = () => {
         </div>
 
         <div className="space-y-6" ref={printRef}>
-          {/* Winner banner */}
           <div className={`rounded-2xl p-5 flex items-center gap-4 border ${
             result.winner === 'mortgage'
               ? 'bg-profit/5 border-profit/20'
@@ -84,8 +87,8 @@ const ComparisonView: React.FC = () => {
             <div>
               <p className="font-black text-foreground text-lg tracking-tight">
                 {result.winner === 'mortgage'
-                  ? `Nemovitost vyhrává o ${formatCurrency(Math.abs(result.difference))}!`
-                  : `ETF vyhrává o ${formatCurrency(Math.abs(result.difference))}!`}
+                  ? `Nemovitost vyhrává o ${fc(Math.abs(result.difference))}!`
+                  : `ETF vyhrává o ${fc(Math.abs(result.difference))}!`}
               </p>
               <p className="text-sm text-muted-foreground">Rozdíl: {formatPercent(Math.abs(result.differencePercent))}</p>
             </div>
@@ -100,12 +103,12 @@ const ComparisonView: React.FC = () => {
                 <h3 className="font-bold text-foreground text-sm">Investice do nemovitosti</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
-                <Row label="Hodnota nemovitosti" value={formatCurrency(result.mortgage.propertyValue)} />
-                <Row label="Zbývající dluh" value={formatCurrency(result.mortgage.remainingDebt)} className="text-loss" />
-                <Row label="Kumulativní cash flow" value={formatCurrency(result.mortgage.cumulativeCashFlow)} className={result.mortgage.cumulativeCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
+                <Row label="Hodnota nemovitosti" value={fc(result.mortgage.propertyValue)} />
+                <Row label="Zbývající dluh" value={fc(result.mortgage.remainingDebt)} className="text-loss" />
+                <Row label="Kumulativní cash flow" value={fc(result.mortgage.cumulativeCashFlow)} className={result.mortgage.cumulativeCashFlow >= 0 ? 'text-profit' : 'text-loss'} />
                 <div className="border-t border-border/30 pt-2.5">
                   <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
-                  <p className="text-2xl font-black text-foreground tracking-tight">{formatCurrency(result.mortgage.netWorth)}</p>
+                  <p className="text-2xl font-black text-foreground tracking-tight">{fc(result.mortgage.netWorth)}</p>
                 </div>
                 <Row label="ROI" value={formatPercent(result.mortgage.roi)} />
                 <Row label="Roční ROI" value={formatPercent(result.mortgage.annualROI)} />
@@ -120,12 +123,12 @@ const ComparisonView: React.FC = () => {
                 <h3 className="font-bold text-foreground text-sm">Investice do ETF</h3>
               </div>
               <div className="space-y-2.5 stat-value text-sm">
-                <Row label="Celková hodnota" value={formatCurrency(result.etf.totalValue)} />
-                <Row label="Celkem investováno" value={formatCurrency(result.etf.totalInvested)} />
-                <Row label="Výnosy" value={formatCurrency(result.etf.earnings)} className="text-profit" />
+                <Row label="Celková hodnota" value={fc(result.etf.totalValue)} />
+                <Row label="Celkem investováno" value={fc(result.etf.totalInvested)} />
+                <Row label="Výnosy" value={fc(result.etf.earnings)} className="text-profit" />
                 <div className="border-t border-border/30 pt-2.5">
                   <p className="text-xs text-muted-foreground font-sans">Čisté jmění</p>
-                  <p className="text-2xl font-black text-foreground tracking-tight">{formatCurrency(result.etf.totalValue)}</p>
+                  <p className="text-2xl font-black text-foreground tracking-tight">{fc(result.etf.totalValue)}</p>
                 </div>
                 <Row label="ROI" value={formatPercent(result.etf.roi)} />
                 <Row label="Roční ROI" value={formatPercent(result.etf.annualROI)} />
@@ -142,7 +145,7 @@ const ComparisonView: React.FC = () => {
                 <LineChart data={timeline}>
                   <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                   <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
+                  <Tooltip formatter={(value: number) => fc(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                   <Legend />
                   <ReferenceLine y={downPayment} stroke="#9ca3af" strokeDasharray="3 3" />
                   <Line type="monotone" dataKey="mortgageNetWorth" name="Nemovitost (čisté jmění)" stroke="#10b981" strokeWidth={2.5} dot={{ r: 3, fill: '#10b981' }} />
