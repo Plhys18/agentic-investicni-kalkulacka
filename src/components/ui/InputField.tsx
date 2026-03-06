@@ -16,9 +16,9 @@ interface InputFieldProps {
 const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, min, max, step = 1, unit, readOnly, displayValue }) => {
   if (readOnly) {
     return (
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-muted-foreground">{label}</label>
-        <div className="input-field bg-muted cursor-default [font-variant-numeric:tabular-nums]">
+      <div className="space-y-1.5">
+        <label className="text-sm font-medium text-foreground">{label}</label>
+        <div className="input-field bg-muted/50 cursor-default stat-value">
           {displayValue ?? value} {unit}
         </div>
       </div>
@@ -26,12 +26,12 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, min, ma
   }
 
   return (
-    <div className="space-y-1">
-      <label className="text-sm font-medium text-muted-foreground">{label}</label>
+    <div className="space-y-1.5">
+      <label className="text-sm font-medium text-foreground">{label}</label>
       <div className="flex items-center gap-2">
         <input
           type="number"
-          className="input-field [font-variant-numeric:tabular-nums]"
+          className="input-field stat-value"
           value={value}
           onChange={(e) => {
             let v = safeNumber(e.target.value);
@@ -43,7 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, min, ma
           max={max}
           step={step}
         />
-        {unit && <span className="text-sm text-muted-foreground whitespace-nowrap">{unit}</span>}
+        {unit && <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">{unit}</span>}
       </div>
     </div>
   );

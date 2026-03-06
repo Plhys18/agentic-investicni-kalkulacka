@@ -10,9 +10,7 @@ interface ExportButtonsProps {
 }
 
 const ExportButtons: React.FC<ExportButtonsProps> = ({ printRef, pdfData, tabName }) => {
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-  });
+  const handlePrint = useReactToPrint({ contentRef: printRef });
 
   const handlePDF = useCallback(() => {
     const doc = new jsPDF();
@@ -50,11 +48,11 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({ printRef, pdfData, tabNam
 
   return (
     <div className="flex gap-3 no-print">
-      <button onClick={handlePDF} className="btn-primary flex items-center gap-2 text-sm">
+      <button onClick={handlePDF} className="btn-primary flex items-center gap-2">
         <Download size={16} />
         Exportovat PDF
       </button>
-      <button onClick={() => handlePrint()} className="btn-primary flex items-center gap-2 text-sm opacity-90">
+      <button onClick={() => handlePrint()} className="btn-secondary flex items-center gap-2">
         <Printer size={16} />
         Tisknout
       </button>
