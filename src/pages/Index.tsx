@@ -90,6 +90,7 @@ const IndexInner: React.FC = () => {
             </a>
           </div>
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {t('footer.copyright')}</p>
+          <p className="text-[10px] text-muted-foreground/70 max-w-xl text-center leading-relaxed mt-2">{t('disclaimer.finance')}</p>
         </div>
       </footer>
     </div>
