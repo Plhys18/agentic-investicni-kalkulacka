@@ -77,15 +77,13 @@ const MortgageCalculator: React.FC = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6">
       <div className="calculator-card space-y-5">
-        <div>
-          <p className="section-title mb-4">Parametry nemovitosti</p>
-          <div className="space-y-4">
-            <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
-            <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
-          </div>
+        <p className="section-title mb-4">Parametry nemovitosti</p>
+        <div className="space-y-4">
+          <SliderInput label="Cena nemovitosti" value={propertyPrice} onChange={setPropertyPrice} min={500000} max={30000000} step={100000} unit="CZK" />
+          <SliderInput label="Vlastní zdroje (akontace)" value={downPayment} onChange={(v) => setDownPayment(Math.min(v, propertyPrice))} min={0} max={propertyPrice} step={50000} unit="CZK" />
         </div>
 
-        <div className="rounded-lg p-3.5 space-y-1.5" style={{ background: 'linear-gradient(135deg, hsl(var(--primary-50)), hsl(var(--blue-50)))' }}>
+        <div className="rounded-xl p-3.5 space-y-1.5 bg-primary/10">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Výše úvěru</span>
             <span className="font-bold text-foreground stat-value">{formatCurrency(loanAmount)}</span>
@@ -115,7 +113,7 @@ const MortgageCalculator: React.FC = () => {
       <div className="space-y-6" ref={printRef}>
         {noMortgage ? (
           <ResultCard>
-            <p className="text-lg font-semibold text-foreground">Bez hypotéky</p>
+            <p className="text-lg font-bold text-foreground">Bez hypotéky</p>
             <p className="text-sm text-muted-foreground">Nemovitost je plně pokryta vlastními zdroji.</p>
           </ResultCard>
         ) : (
@@ -124,7 +122,7 @@ const MortgageCalculator: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <p className="section-title mb-1">Měsíční splátka</p>
-                  <p className="text-3xl font-extrabold text-foreground stat-value">{formatCurrency(result.monthlyPayment)}</p>
+                  <p className="text-4xl font-black text-foreground stat-value tracking-tight">{formatCurrency(result.monthlyPayment)}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                   <StatItem label="Celkem zaplaceno" value={formatCurrency(result.totalPaid)} />
@@ -147,21 +145,21 @@ const MortgageCalculator: React.FC = () => {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="gradPrincipal" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
-                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.2} />
+                        <stop offset="0%" stopColor="#FACC15" stopOpacity={0.7} />
+                        <stop offset="100%" stopColor="#FACC15" stopOpacity={0.1} />
                       </linearGradient>
                       <linearGradient id="gradInterest" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.8} />
-                        <stop offset="100%" stopColor="#ef4444" stopOpacity={0.2} />
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.6} />
+                        <stop offset="100%" stopColor="#ef4444" stopOpacity={0.1} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="rok" tick={{ fontSize: 12 }} />
                     <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                    <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                     <Legend />
-                    <Area type="monotone" dataKey="jistina" name="Jistina" stackId="1" fill="url(#gradPrincipal)" stroke="#3b82f6" strokeWidth={2} />
+                    <Area type="monotone" dataKey="jistina" name="Jistina" stackId="1" fill="url(#gradPrincipal)" stroke="#EAB308" strokeWidth={2} />
                     <Area type="monotone" dataKey="urok" name="Úrok" stackId="1" fill="url(#gradInterest)" stroke="#ef4444" strokeWidth={2} />
-                    <Area type="monotone" dataKey="zustatek" name="Zůstatek" fill="transparent" stroke="#6b7280" strokeWidth={2} strokeDasharray="5 5" />
+                    <Area type="monotone" dataKey="zustatek" name="Zůstatek" fill="transparent" stroke="#9ca3af" strokeWidth={2} strokeDasharray="5 5" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -173,15 +171,13 @@ const MortgageCalculator: React.FC = () => {
                 {showTable ? 'Skrýt amortizační tabulku' : 'Zobrazit amortizační tabulku'}
               </button>
               {showTable && (
-                <div className="mt-4 overflow-x-auto rounded-lg border border-border/50">
+                <div className="mt-4 overflow-x-auto rounded-xl border border-border/50">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-muted/70">
-                        <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Měsíc</th>
-                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Splátka</th>
-                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Jistina</th>
-                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Úrok</th>
-                        <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Zůstatek</th>
+                        {['Měsíc', 'Splátka', 'Jistina', 'Úrok', 'Zůstatek'].map((h, i) => (
+                          <th key={h} className={`px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-muted-foreground ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                        ))}
                       </tr>
                     </thead>
                     <tbody className="stat-value">
@@ -214,7 +210,7 @@ const StatItem: React.FC<{ label: string; value: string; className?: string }> =
 );
 
 const TableRow: React.FC<{ row: any }> = ({ row }) => (
-  <tr className="border-t border-border/30 hover:bg-muted/30 transition-colors">
+  <tr className="border-t border-border/30 hover:bg-primary/5 transition-colors">
     <td className="px-3 py-1.5">{row.month}</td>
     <td className="px-3 py-1.5 text-right">{formatCurrency(row.payment)}</td>
     <td className="px-3 py-1.5 text-right">{formatCurrency(row.principal)}</td>

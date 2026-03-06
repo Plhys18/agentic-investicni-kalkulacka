@@ -53,7 +53,7 @@ const ETFCalculator: React.FC = () => {
           <div className="space-y-4">
             <div>
               <p className="section-title mb-1">Celková hodnota</p>
-              <p className="text-3xl font-extrabold text-profit stat-value">{formatCurrency(result.finalValue)}</p>
+              <p className="text-4xl font-black text-profit stat-value tracking-tight">{formatCurrency(result.finalValue)}</p>
             </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
               <StatItem label="Celkem investováno" value={formatCurrency(result.totalInvested)} />
@@ -73,19 +73,19 @@ const ETFCalculator: React.FC = () => {
               <AreaChart data={result.timeline}>
                 <defs>
                   <linearGradient id="gradInvested" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.6} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.1} />
+                    <stop offset="0%" stopColor="#FACC15" stopOpacity={0.5} />
+                    <stop offset="100%" stopColor="#FACC15" stopOpacity={0.05} />
                   </linearGradient>
                   <linearGradient id="gradValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.6} />
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
                     <stop offset="100%" stopColor="#10b981" stopOpacity={0.05} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12 }} />
-                <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13 }} />
                 <Legend />
-                <Area type="monotone" dataKey="invested" name="Investováno" fill="url(#gradInvested)" stroke="#3b82f6" strokeWidth={2} />
+                <Area type="monotone" dataKey="invested" name="Investováno" fill="url(#gradInvested)" stroke="#EAB308" strokeWidth={2} />
                 <Area type="monotone" dataKey="value" name="Celková hodnota" fill="url(#gradValue)" stroke="#10b981" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
@@ -98,19 +98,18 @@ const ETFCalculator: React.FC = () => {
             {showTable ? 'Skrýt tabulku' : 'Zobrazit tabulku po ročích'}
           </button>
           {showTable && (
-            <div className="mt-4 overflow-x-auto rounded-lg border border-border/50">
+            <div className="mt-4 overflow-x-auto rounded-xl border border-border/50">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-muted/70">
-                    <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Rok</th>
-                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Hodnota</th>
-                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Investováno</th>
-                    <th className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Výnos</th>
+                    {['Rok', 'Hodnota', 'Investováno', 'Výnos'].map((h, i) => (
+                      <th key={h} className={`px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-muted-foreground ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="stat-value">
                   {result.timeline.map((row) => (
-                    <tr key={row.year} className="border-t border-border/30 hover:bg-muted/30 transition-colors">
+                    <tr key={row.year} className="border-t border-border/30 hover:bg-primary/5 transition-colors">
                       <td className="px-3 py-1.5">{row.year}</td>
                       <td className="px-3 py-1.5 text-right">{formatCurrency(row.value)}</td>
                       <td className="px-3 py-1.5 text-right">{formatCurrency(row.invested)}</td>
