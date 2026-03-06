@@ -30,8 +30,8 @@ const IndexInner: React.FC = () => {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div style={{ display: activeTab === 0 ? 'block' : 'none' }}><MortgageCalculator /></div>
         <div style={{ display: activeTab === 1 ? 'block' : 'none' }}><ETFCalculator /></div>
-        <div style={{ display: activeTab === 2 ? 'block' : 'none' }}><DCACalculator /></div>
-        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}><ComparisonView /></div>
+        <div style={{ display: activeTab === 2 ? 'block' : 'none' }}><ComparisonView /></div>
+        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}><DCACalculator /></div>
       </main>
       <footer className="py-8 border-t border-border/50 no-print">
         <div className="flex flex-col items-center gap-4">

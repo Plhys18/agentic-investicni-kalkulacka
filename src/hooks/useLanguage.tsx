@@ -15,9 +15,9 @@ const translations: Record<string, Record<Lang, string>> = {
 
   // Tabs
   'tab.mortgage': { cs: 'Hypotéka', en: 'Mortgage' },
-  'tab.etf': { cs: 'ETF Kalkulačka', en: 'ETF Calculator' },
-  'tab.dca': { cs: 'DCA Aktiva', en: 'DCA Assets' },
-  'tab.comparison': { cs: 'Porovnání', en: 'Comparison' },
+  'tab.etf': { cs: 'Spoření & ETF', en: 'Savings & ETF' },
+  'tab.comparison': { cs: 'Hypotéka vs ETF', en: 'Mortgage vs ETF' },
+  'tab.dca': { cs: 'DCA Investice', en: 'DCA Investing' },
 
   // Mortgage
   'mortgage.params': { cs: 'Parametry nemovitosti', en: 'Property parameters' },
