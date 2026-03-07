@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { MORTGAGE_DEFAULTS, ETF_DEFAULTS, COMPARISON_DEFAULTS } from '@/lib/constants';
 import type { Currency } from '@/hooks/useCurrency';
 
@@ -174,8 +174,13 @@ export const CalculatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }));
   }, []);
 
+  const value = useMemo(() => ({
+    mortgage, setMortgage, etf, setETF, dca, setDCA,
+    comparison, setComparison, fire, setFIRE, tax, setTax, convertAllValues,
+  }), [mortgage, etf, dca, comparison, fire, tax, setMortgage, setETF, setDCA, setComparison, setFIRE, setTax, convertAllValues]);
+
   return (
-    <CalculatorContext.Provider value={{ mortgage, setMortgage, etf, setETF, dca, setDCA, comparison, setComparison, fire, setFIRE, tax, setTax, convertAllValues }}>
+    <CalculatorContext.Provider value={value}>
       {children}
     </CalculatorContext.Provider>
   );
