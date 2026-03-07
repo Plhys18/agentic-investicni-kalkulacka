@@ -27,8 +27,7 @@ const IndexInner: React.FC = () => {
   const { isDark, toggle } = useDarkMode();
   const [activeTab, setActiveTab] = useState(0);
   const [showDevBanner, setShowDevBanner] = useState(true);
-  const { t } = useLanguage();
-  const { lang, setLang } = useLanguage();
+  const { t, lang, setLang } = useLanguage();
   const { currency, setCurrency } = useCurrency();
   const store = useCalculatorStore();
   const { generateShareURL } = useShareURL(activeTab);
@@ -98,11 +97,11 @@ const IndexInner: React.FC = () => {
 };
 
 const CurrencyWrapper: React.FC = () => {
-  const store = useCalculatorStore();
+  const { convertAllValues } = useCalculatorStore();
 
   const handleCurrencyChange = useCallback((from: Currency, to: Currency) => {
-    store.convertAllValues(from, to, convertFn);
-  }, [store]);
+    convertAllValues(from, to, convertFn);
+  }, [convertAllValues]);
 
   return (
     <CurrencyProvider onCurrencyChange={handleCurrencyChange}>
