@@ -191,7 +191,7 @@ const MortgageCalculator: React.FC = () => {
                           {tableRows.last.map((row) => <TableRow key={row.month} row={row} fc={fc} />)}
                         </>
                       ) : (
-                        tableRows.rows.map((row) => <TableRow key={row.month} row={row} fc={fc} />)
+                        (tableRows as { truncated: false; rows: AmortizationRow[] }).rows.map((row) => <TableRow key={row.month} row={row} fc={fc} />)
                       )}
                     </tbody>
                   </table>

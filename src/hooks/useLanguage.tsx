@@ -148,6 +148,15 @@ const translations: Record<string, Record<Lang, string>> = {
   'share.copied': { cs: 'Odkaz zkopírován do schránky!', en: 'Link copied to clipboard!' },
   'share.copyManual': { cs: 'Zkopírujte odkaz:', en: 'Copy the link:' },
 
+  // Education
+  'tab.education': { cs: 'Vzdělávání', en: 'Education' },
+  'edu.videos': { cs: 'Videa od Vojty', en: "Vojta's Videos" },
+  'edu.videosDesc': { cs: 'Naučte se investovat s Vojtovými videi na YouTube', en: "Learn to invest with Vojta's YouTube videos" },
+  'edu.glossary': { cs: 'Slovník pojmů', en: 'Glossary' },
+  'edu.glossaryDesc': { cs: 'Základní finanční pojmy srozumitelně vysvětlené', en: 'Key financial terms explained clearly' },
+  'edu.expandAll': { cs: 'Rozbalit vše', en: 'Expand all' },
+  'edu.collapseAll': { cs: 'Sbalit vše', en: 'Collapse all' },
+
   // Common
   'common.year': { cs: 'Rok', en: 'Year' },
   'common.years': { cs: 'let', en: 'years' },
