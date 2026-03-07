@@ -11,6 +11,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useCalculatorStore } from '@/hooks/useCalculatorStore';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import type { AmortizationRow, TableRows } from '@/types';
 
 const MortgageCalculator: React.FC = () => {
   const { currency } = useCurrency();
@@ -51,10 +52,10 @@ const MortgageCalculator: React.FC = () => {
   const principalRatio = 100 - interestRatio;
   const noMortgage = loanAmount <= 0;
 
-  const tableRows = useMemo(() => {
+  const tableRows: TableRows = useMemo(() => {
     const s = result.amortizationSchedule;
-    if (s.length <= 120) return { rows: s, truncated: false };
-    return { first: s.slice(0, 60), last: s.slice(-60), truncated: true };
+    if (s.length <= 120) return { rows: s, truncated: false } as const;
+    return { first: s.slice(0, 60), last: s.slice(-60), truncated: true } as const;
   }, [result]);
 
   const pdfData = {
@@ -185,12 +186,12 @@ const MortgageCalculator: React.FC = () => {
                     <tbody className="stat-value">
                       {tableRows.truncated ? (
                         <>
-                          {(tableRows as any).first.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)}
-                          <tr><td colSpan={5} className="text-center py-3 text-muted-foreground font-sans">⋯</td></tr>
-                          {(tableRows as any).last.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)}
+                          {tableRows.first.map((row) => <TableRow key={row.month} row={row} fc={fc} />)}
+                          <tr><td colSpan={5} className="text-center py-3 text-muted-foreground font-sans">...</td></tr>
+                          {tableRows.last.map((row) => <TableRow key={row.month} row={row} fc={fc} />)}
                         </>
                       ) : (
-                        (tableRows as any).rows?.map((row: any) => <TableRow key={row.month} row={row} fc={fc} />)
+                        tableRows.rows.map((row) => <TableRow key={row.month} row={row} fc={fc} />)
                       )}
                     </tbody>
                   </table>
@@ -211,7 +212,7 @@ const StatItem: React.FC<{ label: string; value: string; className?: string }> =
   </div>
 );
 
-const TableRow: React.FC<{ row: any; fc: (n: number) => string }> = ({ row, fc }) => (
+const TableRow: React.FC<{ row: AmortizationRow; fc: (n: number) => string }> = ({ row, fc }) => (
   <tr className="border-t border-border/30 hover:bg-primary/5 transition-colors">
     <td className="px-3 py-1.5">{row.month}</td>
     <td className="px-3 py-1.5 text-right">{fc(row.payment)}</td>

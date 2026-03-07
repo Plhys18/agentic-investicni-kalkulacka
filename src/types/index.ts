@@ -73,3 +73,7 @@ export interface ComparisonTimeline {
   mortgageNetWorth: number;
   etfValue: number;
 }
+
+export type TableRows =
+  | { truncated: false; rows: AmortizationRow[] }
+  | { truncated: true; first: AmortizationRow[]; last: AmortizationRow[] };
