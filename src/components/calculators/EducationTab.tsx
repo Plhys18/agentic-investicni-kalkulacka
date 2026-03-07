@@ -26,11 +26,11 @@ const videos: VideoLink[] = [
     descEn: 'Complete beginner guide — what are ETFs, how to choose and where to buy.',
   },
   {
-    titleCs: 'Hypotéka vs. investice — co se vyplatí víc?',
-    titleEn: 'Mortgage vs. Investing — Which Pays Off More?',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    descCs: 'Podrobné srovnání nemovitosti a investování do akcií na reálných číslech.',
-    descEn: 'Detailed comparison of real estate vs. stock investing with real numbers.',
+    titleCs: 'Nemovitost vs. investice — co se vyplatí víc?',
+    titleEn: 'Real Estate vs. Investing — Which Pays Off More?',
+    url: 'https://www.youtube.com/watch?v=yKIbPktAOYs',
+    descCs: 'Rozbor nemovitosti vs. investování — reálná čísla a srovnání obou přístupů.',
+    descEn: 'Analysis of real estate vs. investing — real numbers and comparison of both approaches.',
   },
   {
     titleCs: 'Co je FIRE a jak dosáhnout finanční nezávislosti',
