@@ -54,7 +54,7 @@ export function formatInputDisplay(num: number): string {
 /** Parse a formatted input string back to number */
 export function parseInputValue(val: string): number {
   // Remove spaces (thousand sep) and replace comma with dot
-  const cleaned = val.replace(/\s/g, '').replace(',', '.');
+  const cleaned = val.replace(/\s/g, '').replace(/,/g, '.');
   const n = Number(cleaned);
   return isNaN(n) ? 0 : n;
 }
