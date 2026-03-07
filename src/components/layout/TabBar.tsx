@@ -17,13 +17,15 @@ const TabBar: React.FC<{ activeTab: number; onTabChange: (index: number) => void
   return (
     <div className="bg-card/60 backdrop-blur-sm border-b border-border/50 no-print">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-center gap-1 overflow-x-auto scrollbar-hide">
+        <div className="flex justify-center gap-1 overflow-x-auto scrollbar-hide" role="tablist">
           {tabs.map((tab, i) => {
             const Icon = tab.icon;
             const isActive = activeTab === i;
             return (
               <button
                 key={i}
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => onTabChange(i)}
                 className={`relative flex items-center gap-1.5 px-3 sm:px-4 py-3.5 text-xs sm:text-sm lg:text-base font-medium transition-all duration-200 whitespace-nowrap ${
                   isActive ? 'text-foreground font-bold' : 'text-muted-foreground hover:text-foreground'
