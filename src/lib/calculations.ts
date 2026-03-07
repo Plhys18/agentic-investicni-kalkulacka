@@ -100,13 +100,17 @@ export function calculateComparison(
   const effectiveRent = mortgage.monthlyRent * (1 - mortgage.vacancyRate / 100);
   const monthlyCashFlow = effectiveRent - mortgage.monthlyExpenses - mortgagePayment.monthlyPayment;
 
-  // ETF alternative: invest down payment + cover negative cash flow
-  const etfMonthlyContrib = monthlyCashFlow < 0 ? Math.abs(monthlyCashFlow) : 0;
-  const etfResult = calculateCompoundInterest(mortgage.downPayment, etfMonthlyContrib, etfReturn, comparisonYears);
+  // --- ETF alternative: month-by-month simulation ---
+  // The ETF investor starts with the same down payment and each month invests
+  // the same total outflow the mortgage investor pays (payment + expenses).
+  // After the loan term ends, only expenses continue.
+  const etfMonthlyRate = etfReturn / 100 / 12;
+  let etfValue = mortgage.downPayment;
+  let totalETFContributed = mortgage.downPayment;
 
   const timeline: ComparisonTimeline[] = [];
   let cumulativeCashFlow = 0;
-  const cashFlowCompoundRate = 0.05 / 12; // 5% reinvestment rate
+  const cashFlowCompoundRate = 0.05 / 12; // 5% reinvestment rate for positive cash flow
 
   for (let year = 1; year <= comparisonYears; year++) {
     // Property value with appreciation
@@ -119,16 +123,22 @@ export function calculateComparison(
       remainingDebt = mortgagePayment.amortizationSchedule[monthIndex - 1].balance;
     }
 
-    // Cumulative cash flow (compounded)
+    // Month-by-month within this year
     for (let m = (year - 1) * 12; m < year * 12; m++) {
       const isLoanActive = m < mortgagePayment.amortizationSchedule.length;
       const currentPayment = isLoanActive ? mortgagePayment.monthlyPayment : 0;
+
+      // ETF side: invest same outflow as mortgage investor
+      const etfContrib = currentPayment + mortgage.monthlyExpenses;
+      etfValue = etfValue * (1 + etfMonthlyRate) + etfContrib;
+      totalETFContributed += etfContrib;
+
+      // Mortgage side: cumulative cash flow (compounded)
       const cf = effectiveRent - mortgage.monthlyExpenses - currentPayment;
       cumulativeCashFlow = cumulativeCashFlow * (1 + cashFlowCompoundRate) + cf;
     }
 
     const mortgageNetWorth = propertyValue - remainingDebt + cumulativeCashFlow;
-    const etfValue = year <= etfResult.timeline.length ? etfResult.timeline[year - 1].value : etfResult.finalValue;
 
     timeline.push({ year, mortgageNetWorth, etfValue });
   }
@@ -148,6 +158,9 @@ export function calculateComparison(
     ? mortgagePayment.amortizationSchedule[comparisonYears * 12 - 1].balance
     : 0;
 
+  const etfROI = totalETFContributed > 0 ? ((etfNetWorth - totalETFContributed) / totalETFContributed) * 100 : 0;
+  const etfAnnualROI = totalETFContributed > 0 && etfNetWorth > 0 ? (Math.pow(etfNetWorth / totalETFContributed, 1 / comparisonYears) - 1) * 100 : 0;
+
   return {
     result: {
       mortgage: {
@@ -160,10 +173,10 @@ export function calculateComparison(
       },
       etf: {
         totalValue: etfNetWorth,
-        totalInvested: etfResult.totalInvested,
-        earnings: etfResult.totalEarnings,
-        roi: etfResult.roi,
-        annualROI: etfResult.totalInvested > 0 ? (Math.pow(etfNetWorth / etfResult.totalInvested, 1 / comparisonYears) - 1) * 100 : 0,
+        totalInvested: totalETFContributed,
+        earnings: etfNetWorth - totalETFContributed,
+        roi: etfROI,
+        annualROI: etfAnnualROI,
       },
       difference,
       differencePercent,
