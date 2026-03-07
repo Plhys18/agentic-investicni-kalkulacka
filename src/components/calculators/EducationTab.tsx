@@ -19,15 +19,15 @@ interface GlossaryItem {
 
 const videos: VideoLink[] = [
   {
-    titleCs: 'Jak investovat do ETF',
-    titleEn: 'How to Invest in ETFs',
+    titleCs: 'Rozhovor s Kirillem Juranem o investování do ETF',
+    titleEn: 'Interview with Kirill Juran on ETF Investing',
     url: 'https://www.youtube.com/watch?v=rCcGZDi-hCs',
     descCs: 'Kompletní průvodce investováním do ETF — co jsou, jak si vybrat a kde koupit.',
     descEn: 'Complete guide to investing in ETFs — what they are, how to choose and where to buy.',
   },
   {
-    titleCs: 'Nemovitost vs. investice — co se vyplatí víc?',
-    titleEn: 'Real Estate vs. Investing — Which Pays Off More?',
+    titleCs: 'Kirill Juran vs. Dan Kotula — nemovitost vs. investice',
+    titleEn: 'Kirill Juran vs. Dan Kotula — Real Estate vs. Investing',
     url: 'https://www.youtube.com/watch?v=yKIbPktAOYs',
     descCs: 'Rozbor nemovitosti vs. investování — reálná čísla a srovnání obou přístupů.',
     descEn: 'Analysis of real estate vs. investing — real numbers and comparison of both approaches.',
@@ -40,32 +40,11 @@ const videos: VideoLink[] = [
     descEn: 'How other investors do it — practical experience with real estate investing.',
   },
   {
-    titleCs: 'Rozhovor o tradingu akcií — disclaimer',
-    titleEn: 'Stock Trading Discussion — Disclaimer',
+    titleCs: 'Rozhovor s Kirillem Juranem o tradingu akcií',
+    titleEn: 'Interview with Kirill Juran on Stock Trading',
     url: 'https://www.youtube.com/watch?v=2P-oEwsxZvw',
     descCs: 'Upřímný rozhovor o tradingu akcií — rizika, realita a co byste měli vědět.',
     descEn: 'Honest discussion about stock trading — risks, reality, and what you should know.',
-  },
-  {
-    titleCs: 'Co je FIRE a jak dosáhnout finanční nezávislosti',
-    titleEn: 'What is FIRE and How to Achieve Financial Independence',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    descCs: 'Pravidlo 4 %, míra úspor a praktické tipy pro cestu k FIRE.',
-    descEn: 'The 4% rule, savings rate, and practical tips for the path to FIRE.',
-  },
-  {
-    titleCs: 'DCA strategie — pravidelné investování krok za krokem',
-    titleEn: 'DCA Strategy — Regular Investing Step by Step',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    descCs: 'Proč je DCA nejlepší strategie pro většinu investorů a jak na to.',
-    descEn: 'Why DCA is the best strategy for most investors and how to do it.',
-  },
-  {
-    titleCs: 'Daně z investic v ČR — co potřebujete vědět',
-    titleEn: 'Investment Taxes in Czech Republic — What You Need to Know',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    descCs: 'Přehled daňových pravidel pro akcie, ETF, krypto a nemovitosti.',
-    descEn: 'Overview of tax rules for stocks, ETFs, crypto, and real estate.',
   },
 ];
 
