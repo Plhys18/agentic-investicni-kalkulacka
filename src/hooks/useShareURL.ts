@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useCalculatorStore } from '@/hooks/useCalculatorStore';
-import { useCurrency } from '@/hooks/useCurrency';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useCurrency, type Currency } from '@/hooks/useCurrency';
+import { useLanguage, type Lang } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
 
 export function useShareURL(activeTab: number) {
@@ -51,8 +51,8 @@ export function useShareURL(activeTab: number) {
 export function loadFromURL(
   setTab: (n: number) => void,
   store: ReturnType<typeof useCalculatorStore>,
-  setCurrency: (c: any) => void,
-  setLang: (l: any) => void,
+  setCurrency: (c: Currency) => void,
+  setLang: (l: Lang) => void,
 ) {
   const params = new URLSearchParams(window.location.search);
   
