@@ -62,8 +62,8 @@ export function loadFromURL(
   const tab = Number(params.get('tab') || 0);
   setTab(tab);
 
-  if (params.has('cur')) setCurrency(params.get('cur'));
-  if (params.has('lang')) setLang(params.get('lang'));
+  if (params.has('cur')) setCurrency(params.get('cur') as Currency);
+  if (params.has('lang')) setLang(params.get('lang') as Lang);
 
   try {
     if (params.has('m')) {
