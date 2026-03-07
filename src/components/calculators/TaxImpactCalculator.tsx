@@ -9,7 +9,8 @@ import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCalculatorStore } from '@/hooks/useCalculatorStore';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { Receipt, Building2, TrendingUp, Bitcoin } from 'lucide-react';
+import { Receipt, Building2, TrendingUp, Bitcoin, Info } from 'lucide-react';
+import { Tooltip as UITooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 
 interface TaxScenario {
   id: string;
@@ -22,6 +23,12 @@ interface TaxScenario {
   netValue: number;
   taxPaid: number;
 }
+
+const exemptionInfo: Record<string, string> = {
+  etf: '§ 4 odst. 1 písm. w) ZDP — osvobození od daně z příjmů platí od 1. ledna 2025 pro cenné papíry (ETF, akcie) držené déle než 3 roky.',
+  crypto: '§ 4 odst. 1 písm. ze) ZDP — osvobození od daně z příjmů platí od 1. ledna 2025 pro kryptoaktiva držená déle než 3 roky.',
+  realEstate: '§ 4 odst. 1 písm. b) ZDP — příjem z prodeje nemovitosti je osvobozen od daně po 10 letech držení.',
+};
 
 const TaxImpactCalculator: React.FC = () => {
   const { currency } = useCurrency();
@@ -147,7 +154,21 @@ const TaxImpactCalculator: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="min-w-0" title={fc(s.taxPaid)}>
-                    <p className="text-[10px] text-muted-foreground">{t('tax.taxPaid')}</p>
+                    <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                      {t('tax.taxPaid')}
+                      {s.taxPaid === 0 && (
+                        <TooltipProvider delayDuration={200}>
+                          <UITooltip>
+                            <TooltipTrigger asChild>
+                              <Info size={11} className="cursor-help shrink-0" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[230px] text-xs leading-snug">
+                              {exemptionInfo[s.id]}
+                            </TooltipContent>
+                          </UITooltip>
+                        </TooltipProvider>
+                      )}
+                    </p>
                     <p className="text-xs md:text-sm font-bold text-red-500 stat-value truncate">{fc(s.taxPaid)}</p>
                   </div>
                   <div className="min-w-0" title={formatPercent(s.netReturn)}>
