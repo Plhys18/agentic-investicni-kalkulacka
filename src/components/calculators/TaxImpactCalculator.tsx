@@ -33,10 +33,21 @@ const TaxImpactCalculator: React.FC = () => {
   const { investmentAmount, investmentYears, etfGrossReturn, realEstateGrossReturn, cryptoGrossReturn, etfTaxRate, realEstateTaxRate, cryptoTaxRate } = tax;
 
   const scenarios = useMemo((): TaxScenario[] => {
-    const calculate = (id: string, icon: React.ReactNode, color: string, grossReturn: number, taxRate: number) => {
+    const calculate = (
+      id: string,
+      icon: React.ReactNode,
+      color: string,
+      grossReturn: number,
+      taxRate: number,
+      exemptionYears: number, // 0 = no exemption
+    ) => {
       const grossCalc = calculateCompoundInterest(investmentAmount, 0, grossReturn, investmentYears);
       const grossEarnings = grossCalc.finalValue - investmentAmount;
-      const taxPaid = grossEarnings * (taxRate / 100);
+      // Czech tax law: gains are exempt if held longer than the exemption period
+      const effectiveTaxRate = (exemptionYears > 0 && investmentYears >= exemptionYears)
+        ? 0
+        : taxRate;
+      const taxPaid = grossEarnings * (effectiveTaxRate / 100);
       const netValue = grossCalc.finalValue - taxPaid;
       const netReturn = investmentAmount > 0 ? (Math.pow(netValue / investmentAmount, 1 / investmentYears) - 1) * 100 : 0;
 
@@ -54,9 +65,9 @@ const TaxImpactCalculator: React.FC = () => {
     };
 
     return [
-      calculate('etf', <TrendingUp size={18} />, 'hsl(var(--primary))', etfGrossReturn, etfTaxRate),
-      calculate('realEstate', <Building2 size={18} />, '#10B981', realEstateGrossReturn, realEstateTaxRate),
-      calculate('crypto', <Bitcoin size={18} />, '#F7931A', cryptoGrossReturn, cryptoTaxRate),
+      calculate('etf', <TrendingUp size={18} />, 'hsl(var(--primary))', etfGrossReturn, etfTaxRate, 3),
+      calculate('realEstate', <Building2 size={18} />, '#10B981', realEstateGrossReturn, realEstateTaxRate, 10),
+      calculate('crypto', <Bitcoin size={18} />, '#F7931A', cryptoGrossReturn, cryptoTaxRate, 3),
     ];
   }, [investmentAmount, investmentYears, etfGrossReturn, realEstateGrossReturn, cryptoGrossReturn, etfTaxRate, realEstateTaxRate, cryptoTaxRate]);
 
@@ -67,14 +78,6 @@ const TaxImpactCalculator: React.FC = () => {
       net: s.netValue,
       tax: s.taxPaid,
       color: s.color,
-    }));
-  }, [scenarios, t]);
-
-  const comparisonData = useMemo(() => {
-    return scenarios.map((s) => ({
-      name: t(`tax.${s.id}`),
-      [t('tax.grossReturn')]: s.grossReturn,
-      [t('tax.netReturn')]: s.netReturn,
     }));
   }, [scenarios, t]);
 
