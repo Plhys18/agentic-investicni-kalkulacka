@@ -76,8 +76,8 @@ const translations: Record<string, Record<Lang, string>> = {
   'dca.silver': { cs: 'Stříbro', en: 'Silver' },
   'dca.goldDesc': { cs: 'Průměrný roční výnos ~8 % (2000–2025, stabilní uchovatel hodnoty)', en: 'Avg annual return ~8% (2000–2025, stable store of value)' },
   'dca.silverDesc': { cs: 'Průměrný roční výnos ~6 % (2000–2025, průmyslový + drahý kov)', en: 'Avg annual return ~6% (2000–2025, industrial + precious metal)' },
-  'dca.btcDesc': { cs: 'Průměrný roční výnos ~60 % (2014–2025, vysoká volatilita)', en: 'Avg annual return ~60% (2014–2025, high volatility)' },
-  'dca.ethDesc': { cs: 'Průměrný roční výnos ~80 % (2017–2025, extrémní volatilita)', en: 'Avg annual return ~80% (2017–2025, extreme volatility)' },
+  'dca.btcDesc': { cs: 'Odhad ~15 % p.a. (konzervativní odhad, vysoká volatilita, minulé výnosy nezaručují budoucí)', en: 'Est. ~15% p.a. (conservative estimate, high volatility, past returns do not guarantee future results)' },
+  'dca.ethDesc': { cs: 'Odhad ~20 % p.a. (spekulativní odhad, extrémní volatilita, minulé výnosy nezaručují budoucí)', en: 'Est. ~20% p.a. (speculative estimate, extreme volatility, past returns do not guarantee future results)' },
 
   // Comparison
   'comp.params': { cs: 'Parametry porovnání', en: 'Comparison parameters' },
