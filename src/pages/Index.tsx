@@ -7,6 +7,7 @@ import DCACalculator from '@/components/calculators/DCACalculator';
 import ComparisonView from '@/components/calculators/ComparisonView';
 import FIRECalculator from '@/components/calculators/FIRECalculator';
 import TaxImpactCalculator from '@/components/calculators/TaxImpactCalculator';
+import EducationTab from '@/components/calculators/EducationTab';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { CurrencyProvider, type Currency } from '@/hooks/useCurrency';
 import { LanguageProvider, useLanguage } from '@/hooks/useLanguage';
@@ -68,6 +69,7 @@ const IndexInner: React.FC = () => {
         <div style={{ display: activeTab === 3 ? 'block' : 'none' }}><DCACalculator /></div>
         <div style={{ display: activeTab === 4 ? 'block' : 'none' }}><FIRECalculator /></div>
         <div style={{ display: activeTab === 5 ? 'block' : 'none' }}><TaxImpactCalculator /></div>
+        <div style={{ display: activeTab === 6 ? 'block' : 'none' }}><EducationTab /></div>
       </main>
       <footer className="py-8 border-t border-border/50 no-print">
         <div className="flex flex-col items-center gap-4">

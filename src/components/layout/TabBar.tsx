@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, TrendingUp, BarChart3, Coins, Flame, Receipt } from 'lucide-react';
+import { Home, TrendingUp, BarChart3, Coins, Flame, Receipt, GraduationCap } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const TabBar: React.FC<{ activeTab: number; onTabChange: (index: number) => void }> = ({ activeTab, onTabChange }) => {
@@ -12,6 +12,7 @@ const TabBar: React.FC<{ activeTab: number; onTabChange: (index: number) => void
     { label: t('tab.dca'), icon: Coins },
     { label: t('tab.fire'), icon: Flame },
     { label: t('tab.tax'), icon: Receipt },
+    { label: t('tab.education'), icon: GraduationCap },
   ];
 
   return (
