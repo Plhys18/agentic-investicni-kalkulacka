@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useCallback } from 'react';
 import SliderInput from '@/components/ui/SliderInput';
 import ResultCard from '@/components/ui/ResultCard';
 import ExportButtons from '@/components/ui/ExportButtons';
@@ -22,8 +22,8 @@ interface AssetInfo {
 }
 
 const ASSETS: AssetInfo[] = [
-  { id: 'bitcoin', labelKey: '', fallback: 'Bitcoin', icon: <Bitcoin size={18} />, color: '#F7931A', avgReturn: 60, descKey: 'dca.btcDesc' },
-  { id: 'ethereum', labelKey: '', fallback: 'Ethereum', icon: <Gem size={18} />, color: '#627EEA', avgReturn: 80, descKey: 'dca.ethDesc' },
+  { id: 'bitcoin', labelKey: '', fallback: 'Bitcoin', icon: <Bitcoin size={18} />, color: '#F7931A', avgReturn: 15, descKey: 'dca.btcDesc' },
+  { id: 'ethereum', labelKey: '', fallback: 'Ethereum', icon: <Gem size={18} />, color: '#627EEA', avgReturn: 20, descKey: 'dca.ethDesc' },
   { id: 'gold', labelKey: 'dca.gold', fallback: 'Gold', icon: <CircleDollarSign size={18} />, color: '#D4AF37', avgReturn: 8, descKey: 'dca.goldDesc' },
   { id: 'silver', labelKey: 'dca.silver', fallback: 'Silver', icon: <CircleDollarSign size={18} />, color: '#C0C0C0', avgReturn: 6, descKey: 'dca.silverDesc' },
 ];
@@ -45,8 +45,8 @@ const DCACalculator: React.FC = () => {
     });
   };
 
-  const getLabel = (asset: AssetInfo) => asset.labelKey ? t(asset.labelKey) : asset.fallback;
-  const getReturn = (asset: AssetInfo) => customReturns[asset.id] ?? asset.avgReturn;
+  const getLabel = useCallback((asset: AssetInfo) => asset.labelKey ? t(asset.labelKey) : asset.fallback, [t]);
+  const getReturn = useCallback((asset: AssetInfo) => customReturns[asset.id] ?? asset.avgReturn, [customReturns]);
 
   const results = useMemo(() => {
     return selectedAssets.map((id) => {
@@ -56,12 +56,12 @@ const DCACalculator: React.FC = () => {
       const cagr = calc.totalInvested > 0 ? (Math.pow(calc.finalValue / calc.totalInvested, 1 / years) - 1) * 100 : 0;
       return { asset, calc, cagr };
     });
-  }, [selectedAssets, monthlyInvestment, initialInvestment, years, customReturns]);
+  }, [selectedAssets, monthlyInvestment, initialInvestment, years, getReturn]);
 
   const chartData = useMemo(() => {
-    const data: Record<string, any>[] = [];
+    const data: Record<string, number>[] = [];
     for (let y = 1; y <= years; y++) {
-      const point: Record<string, any> = { year: y };
+      const point: Record<string, number> = { year: y };
       for (const r of results) {
         const entry = r.calc.timeline.find((ti) => ti.year === y);
         if (entry) point[r.asset.id] = entry.value;
@@ -77,7 +77,7 @@ const DCACalculator: React.FC = () => {
       value: r.calc.finalValue,
       color: r.asset.color,
     }));
-  }, [results]);
+  }, [results, getLabel]);
 
   const pdfData = {
     title: 'DCA',
