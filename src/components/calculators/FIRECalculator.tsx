@@ -126,7 +126,7 @@ const FIRECalculator: React.FC = () => {
               <Target size={16} className="text-orange-500" />
               <p className="section-title">{t('fire.fireTarget')}</p>
             </div>
-            <p className="text-2xl font-black stat-value text-orange-500">{fc(results.fireTarget)}</p>
+            <p className="text-2xl font-black stat-value text-orange-500 truncate">{fc(results.fireTarget)}</p>
           </ResultCard>
           <ResultCard>
             <div className="flex items-center gap-2 mb-2">
