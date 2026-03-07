@@ -19,11 +19,11 @@ interface GlossaryItem {
 
 const videos: VideoLink[] = [
   {
-    titleCs: 'Jak začít investovat do ETF',
-    titleEn: 'How to Start Investing in ETFs',
-    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    descCs: 'Kompletní průvodce pro začátečníky — co jsou ETF, jak si vybrat a kde koupit.',
-    descEn: 'Complete beginner guide — what are ETFs, how to choose and where to buy.',
+    titleCs: 'Jak investovat do ETF',
+    titleEn: 'How to Invest in ETFs',
+    url: 'https://www.youtube.com/watch?v=rCcGZDi-hCs',
+    descCs: 'Kompletní průvodce investováním do ETF — co jsou, jak si vybrat a kde koupit.',
+    descEn: 'Complete guide to investing in ETFs — what they are, how to choose and where to buy.',
   },
   {
     titleCs: 'Nemovitost vs. investice — co se vyplatí víc?',
@@ -31,6 +31,20 @@ const videos: VideoLink[] = [
     url: 'https://www.youtube.com/watch?v=yKIbPktAOYs',
     descCs: 'Rozbor nemovitosti vs. investování — reálná čísla a srovnání obou přístupů.',
     descEn: 'Analysis of real estate vs. investing — real numbers and comparison of both approaches.',
+  },
+  {
+    titleCs: 'Jak investovat do nemovitostí — zkušenosti ostatních',
+    titleEn: 'How to Invest in Real Estate — Others\' Experience',
+    url: 'https://www.youtube.com/watch?v=AJmpIdXnOTM',
+    descCs: 'Jak to dělají ostatní investoři — praktické zkušenosti s investováním do nemovitostí.',
+    descEn: 'How other investors do it — practical experience with real estate investing.',
+  },
+  {
+    titleCs: 'Rozhovor o tradingu akcií — disclaimer',
+    titleEn: 'Stock Trading Discussion — Disclaimer',
+    url: 'https://www.youtube.com/watch?v=2P-oEwsxZvw',
+    descCs: 'Upřímný rozhovor o tradingu akcií — rizika, realita a co byste měli vědět.',
+    descEn: 'Honest discussion about stock trading — risks, reality, and what you should know.',
   },
   {
     titleCs: 'Co je FIRE a jak dosáhnout finanční nezávislosti',
