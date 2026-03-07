@@ -25,17 +25,17 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
     }
   }, [value, isFocused]);
 
-  const clamp = (v: number) => Math.min(max, Math.max(min, v));
+  const clamp = useCallback((v: number) => Math.min(max, Math.max(min, v)), [min, max]);
   const progress = max > min ? ((value - min) / (max - min)) * 100 : 0;
 
   const getValueFromPosition = useCallback((clientX: number) => {
     const track = trackRef.current;
-    if (!track) return value;
+    if (!track) return min;
     const rect = track.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     const raw = min + ratio * (max - min);
     return clamp(Math.round(raw / step) * step);
-  }, [min, max, step, value]);
+  }, [min, max, step, clamp]);
 
   const getThumbPosition = useCallback(() => {
     const track = trackRef.current;
@@ -86,6 +86,36 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
       onChange(getValueFromPosition(e.clientX));
     }
   }, [isNearThumb, getValueFromPosition, onChange]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    let newValue = value;
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        newValue = clamp(value + step);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        newValue = clamp(value - step);
+        break;
+      case 'Home':
+        newValue = min;
+        break;
+      case 'End':
+        newValue = max;
+        break;
+      case 'PageUp':
+        newValue = clamp(value + step * 10);
+        break;
+      case 'PageDown':
+        newValue = clamp(value - step * 10);
+        break;
+      default:
+        return; // don't prevent default for other keys
+    }
+    e.preventDefault();
+    onChange(newValue);
+  }, [value, step, min, max, onChange, clamp]);
 
   useEffect(() => {
     if (!isDragging) return;
@@ -143,8 +173,15 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
       <div
         ref={trackRef}
         className="relative w-full h-8 flex items-center cursor-pointer select-none touch-none"
+        role="slider"
+        tabIndex={0}
+        aria-label={label}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
+        onKeyDown={handleKeyDown}
       >
         {/* Track background */}
         <div className="absolute left-0 right-0 h-1.5 rounded-full bg-muted">
