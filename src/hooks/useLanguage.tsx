@@ -14,6 +14,7 @@ const translations: Record<string, Record<Lang, string>> = {
   'app.subtitle': { cs: 'Hypotéka vs. ETF — porovnejte své investice', en: 'Mortgage vs. ETF — compare your investments' },
 
   // Tabs
+  'tab.ai': { cs: 'AI Poradce', en: 'AI Advisor' },
   'tab.mortgage': { cs: 'Hypotéka', en: 'Mortgage' },
   'tab.etf': { cs: 'Spoření & ETF', en: 'Savings & ETF' },
   'tab.comparison': { cs: 'Hypotéka vs ETF', en: 'Mortgage vs ETF' },

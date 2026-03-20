@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sun, Moon, Globe, ChevronDown } from 'lucide-react';
+import { Sun, Moon, ChevronDown, Sparkles } from 'lucide-react';
 import { useCurrency, type Currency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -32,94 +32,100 @@ const Header: React.FC<HeaderProps> = ({ isDark, toggle }) => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-card/80 border-b border-border/50 no-print">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-sm">
-            <span className="text-primary-foreground font-black text-lg">VŽ</span>
+    <header className="sticky top-0 z-50 backdrop-blur-2xl bg-background/60 border-b border-glass-border no-print">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-4 group cursor-pointer">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform duration-300">
+              <span className="text-primary-foreground font-black text-xl italic tracking-tighter">VŽ</span>
+            </div>
+            <div className="absolute -top-1 -right-1">
+              <Sparkles className="text-primary animate-pulse" size={14} />
+            </div>
           </div>
           <div>
-            <h1 className="text-lg lg:text-xl font-extrabold text-foreground leading-tight tracking-tight">
+            <h1 className="text-xl lg:text-2xl font-black text-foreground leading-none tracking-tight premium-gradient-text">
               {t('app.title')}
             </h1>
-            <p className="text-[11px] text-muted-foreground hidden sm:block tracking-wide">
+            <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.15em] mt-1 hidden sm:block">
               {t('app.subtitle')}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Dropdown menu for currency + language */}
+        
+        <div className="flex items-center gap-3">
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-secondary hover:bg-accent border border-border/50 transition-all duration-200 active:scale-95"
-              aria-label="Settings menu"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-secondary/50 hover:bg-secondary border border-border/50 transition-all duration-300 active:scale-95 shadow-sm"
             >
-              <span className="text-xs font-bold text-foreground">{currency}</span>
-              <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} />
+              <span className="text-xs font-black tracking-widest text-foreground">{currency}</span>
+              <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-300 ${menuOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-44 rounded-xl bg-card border border-border/50 shadow-lg overflow-hidden z-50">
-                {/* Currency section */}
-                <div className="px-3 py-2 border-b border-border/50">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                    {lang === 'cs' ? 'Měna' : 'Currency'}
+              <div className="absolute right-0 top-full mt-3 w-52 rounded-2xl bg-card/95 backdrop-blur-xl border border-glass-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 z-50">
+                <div className="px-4 py-3 border-b border-border/10">
+                  <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em]">
+                    {lang === 'cs' ? 'Zvolte měnu' : 'Select Currency'}
                   </span>
                 </div>
-                {currencies.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => {
-                      setCurrency(c);
-                      setMenuOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 text-sm transition-colors ${
-                      currency === c
-                        ? 'bg-primary/10 text-foreground font-bold'
-                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                    }`}
-                  >
-                    {currencyLabels[c]}
-                  </button>
-                ))}
+                <div className="p-1.5 pt-2">
+                  {currencies.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => {
+                        setCurrency(c);
+                        setMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                        currency === c
+                          ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                          : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                      }`}
+                    >
+                      {currencyLabels[c]}
+                    </button>
+                  ))}
+                </div>
 
-                {/* Language section */}
-                <div className="px-3 py-2 border-t border-b border-border/50">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                <div className="px-4 py-3 border-t border-border/10">
+                  <span className="text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em]">
                     {lang === 'cs' ? 'Jazyk' : 'Language'}
                   </span>
                 </div>
-                <button
-                  onClick={() => { setLang('cs'); setMenuOpen(false); }}
-                  className={`w-full text-left px-3 py-2 text-sm transition-colors ${
-                    lang === 'cs'
-                      ? 'bg-primary/10 text-foreground font-bold'
-                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                  }`}
-                >
-                  🇨🇿 Čeština
-                </button>
-                <button
-                  onClick={() => { setLang('en'); setMenuOpen(false); }}
-                  className={`w-full text-left px-3 py-2 text-sm transition-colors ${
-                    lang === 'en'
-                      ? 'bg-primary/10 text-foreground font-bold'
-                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                  }`}
-                >
-                  🇬🇧 English
-                </button>
+                <div className="p-1.5 pb-2">
+                  <button
+                    onClick={() => { setLang('cs'); setMenuOpen(false); }}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                      lang === 'cs'
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                    }`}
+                  >
+                    🇨🇿 Čeština
+                  </button>
+                  <button
+                    onClick={() => { setLang('en'); setMenuOpen(false); }}
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                      lang === 'en'
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                    }`}
+                  >
+                    🇬🇧 English
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
           <button
             onClick={toggle}
-            className="p-2.5 rounded-xl bg-secondary hover:bg-accent border border-border/50 transition-all duration-200 active:scale-95"
+            className="p-3 rounded-2xl bg-secondary/50 hover:bg-secondary border border-border/50 transition-all duration-300 active:scale-95 shadow-sm"
             aria-label={isDark ? 'Light mode' : 'Dark mode'}
           >
-            {isDark ? <Sun size={18} className="text-foreground" /> : <Moon size={18} className="text-foreground" />}
+            {isDark ? <Sun size={18} className="text-primary" /> : <Moon size={18} className="text-foreground" />}
           </button>
         </div>
       </div>

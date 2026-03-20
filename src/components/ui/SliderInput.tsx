@@ -145,14 +145,14 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-3">
-        <label className="text-sm font-medium text-foreground">{label}</label>
-        <div className="flex items-center gap-1.5 shrink-0">
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3 px-1">
+        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/80">{label}</label>
+        <div className="flex items-center gap-2 group">
           <input
             type="text"
             inputMode="decimal"
-            className="w-32 px-2.5 py-1.5 text-right text-sm border border-input rounded-lg bg-card text-foreground stat-value focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200"
+            className="w-28 px-4 py-2 text-right text-xs font-bold border border-input rounded-xl bg-secondary/30 text-foreground stat-value focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all duration-300 outline-none"
             value={textValue}
             onFocus={() => {
               setIsFocused(true);
@@ -166,13 +166,13 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
               }
             }}
           />
-          <span className="text-xs font-medium text-muted-foreground w-8">{unit}</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 w-8">{unit}</span>
         </div>
       </div>
-      {/* Custom slider track */}
+      
       <div
         ref={trackRef}
-        className="relative w-full h-8 flex items-center cursor-pointer select-none touch-none"
+        className="relative w-full h-10 flex items-center cursor-pointer select-none touch-none group"
         role="slider"
         tabIndex={0}
         aria-label={label}
@@ -184,17 +184,28 @@ const SliderInput: React.FC<SliderInputProps> = ({ label, value, onChange, min, 
         onKeyDown={handleKeyDown}
       >
         {/* Track background */}
-        <div className="absolute left-0 right-0 h-1.5 rounded-full bg-muted">
+        <div className="absolute left-0 right-0 h-2 rounded-full bg-secondary/50 overflow-hidden">
           <div
-            className="absolute left-0 top-0 h-full rounded-full bg-primary transition-none"
+            className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-primary/80 to-primary transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>
+        
+        {/* Progress Fill Shadow */}
+        <div 
+          className="absolute left-0 h-4 bg-primary/10 blur-md rounded-full transition-none pointer-events-none"
+          style={{ width: `${progress}%` }}
+        />
+
         {/* Thumb */}
         <div
-          className={`absolute w-5 h-5 rounded-full bg-primary border-2 border-primary-foreground shadow-md -translate-x-1/2 transition-shadow ${isDragging ? 'ring-4 ring-primary/30 scale-110' : ''}`}
+          className={`absolute w-7 h-7 rounded-full bg-primary border-4 border-background shadow-2xl -translate-x-1/2 transition-all duration-300 cubic-bezier(0.34, 1.56, 0.64, 1) ${
+            isDragging ? 'scale-125 ring-8 ring-primary/10' : 'group-hover:scale-110 group-hover:ring-8 group-hover:ring-primary/5'
+          }`}
           style={{ left: `${progress}%` }}
-        />
+        >
+          <div className="absolute inset-0 rounded-full border border-white/20" />
+        </div>
       </div>
     </div>
   );

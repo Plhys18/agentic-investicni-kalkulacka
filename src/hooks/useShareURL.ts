@@ -16,22 +16,22 @@ export function useShareURL(activeTab: number) {
     params.set('lang', lang);
 
     // Encode current tab's data
-    if (activeTab === 0) {
+    if (activeTab === 1) {
       const m = store.mortgage;
       params.set('m', JSON.stringify([m.propertyPrice, m.downPayment, m.interestRate, m.loanTerm, m.monthlyRent, m.monthlyExpenses, m.annualAppreciation, m.vacancyRate]));
-    } else if (activeTab === 1) {
+    } else if (activeTab === 2) {
       const e = store.etf;
       params.set('e', JSON.stringify([e.initialInvestment, e.monthlyContribution, e.annualReturn, e.years]));
-    } else if (activeTab === 2) {
+    } else if (activeTab === 3) {
       const c = store.comparison;
       params.set('c', JSON.stringify([c.comparisonYears, c.etfReturn]));
-    } else if (activeTab === 3) {
+    } else if (activeTab === 4) {
       const d = store.dca;
       params.set('d', JSON.stringify([d.initialInvestment, d.monthlyInvestment, d.years, d.selectedAssets]));
-    } else if (activeTab === 4) {
+    } else if (activeTab === 5) {
       const f = store.fire;
       params.set('f', JSON.stringify([f.currentSavings, f.monthlyIncome, f.monthlyExpenses, f.monthlySavings, f.annualReturn, f.withdrawalRate]));
-    } else if (activeTab === 5) {
+    } else if (activeTab === 6) {
       const x = store.tax;
       params.set('x', JSON.stringify([x.investmentAmount, x.investmentYears, x.etfGrossReturn, x.realEstateGrossReturn, x.cryptoGrossReturn, x.etfTaxRate, x.realEstateTaxRate, x.cryptoTaxRate]));
     }

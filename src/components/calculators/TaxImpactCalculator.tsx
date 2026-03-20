@@ -8,7 +8,7 @@ import { formatCurrency, formatPercent, formatNumber } from '@/lib/formatters';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCalculatorStore } from '@/hooks/useCalculatorStore';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell, CartesianGrid } from 'recharts';
 import { Receipt, Building2, TrendingUp, Bitcoin, Info } from 'lucide-react';
 import { Tooltip as UITooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 
@@ -32,7 +32,7 @@ const exemptionInfo: Record<string, string> = {
 
 const TaxImpactCalculator: React.FC = () => {
   const { currency } = useCurrency();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const fc = (n: number) => formatCurrency(n, currency);
   const { tax, setTax } = useCalculatorStore();
   const printRef = useRef<HTMLDivElement>(null);
@@ -72,9 +72,9 @@ const TaxImpactCalculator: React.FC = () => {
     };
 
     return [
-      calculate('etf', <TrendingUp size={18} />, 'hsl(var(--primary))', etfGrossReturn, etfTaxRate, 3),
-      calculate('realEstate', <Building2 size={18} />, '#10B981', realEstateGrossReturn, realEstateTaxRate, 10),
-      calculate('crypto', <Bitcoin size={18} />, '#F7931A', cryptoGrossReturn, cryptoTaxRate, 3),
+      calculate('etf', <TrendingUp size={20} />, 'hsl(var(--primary))', etfGrossReturn, etfTaxRate, 3),
+      calculate('realEstate', <Building2 size={20} />, '#10B981', realEstateGrossReturn, realEstateTaxRate, 10),
+      calculate('crypto', <Bitcoin size={20} />, '#F7931A', cryptoGrossReturn, cryptoTaxRate, 3),
     ];
   }, [investmentAmount, investmentYears, etfGrossReturn, realEstateGrossReturn, cryptoGrossReturn, etfTaxRate, realEstateTaxRate, cryptoTaxRate]);
 
@@ -101,109 +101,143 @@ const TaxImpactCalculator: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-6">
-      <div className="calculator-card space-y-5">
-        <div className="flex items-center gap-2.5 mb-1">
-          <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
-            <Receipt size={18} className="text-red-500" />
-          </div>
-          <p className="section-title">{t('tax.title')}</p>
-        </div>
-
-        <div className="space-y-4">
-          <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={0} max={maxAmount(currency)} step={100000} unit={currency} />
-          <SliderInput label={t('tax.investmentYears')} value={investmentYears} onChange={(v) => setTax({ investmentYears: v })} min={1} max={30} step={1} unit={t('common.years')} />
-        </div>
-
-        <div className="border-t border-border/50 pt-4 space-y-4">
-          <p className="section-title">{t('tax.etf')} (ETF / {t('tax.stocks')})</p>
-          <SliderInput label={t('tax.grossReturnRate')} value={etfGrossReturn} onChange={(v) => setTax({ etfGrossReturn: v })} min={1} max={30} step={0.5} unit="%" />
-          <SliderInput label={t('tax.taxRate')} value={etfTaxRate} onChange={(v) => setTax({ etfTaxRate: v })} min={0} max={50} step={1} unit="%" />
-          <p className="text-[10px] text-muted-foreground">{t('tax.etfTaxNote')}</p>
-        </div>
-
-        <div className="border-t border-border/50 pt-4 space-y-4">
-          <p className="section-title">{t('tax.realEstate')}</p>
-          <SliderInput label={t('tax.grossReturnRate')} value={realEstateGrossReturn} onChange={(v) => setTax({ realEstateGrossReturn: v })} min={1} max={20} step={0.5} unit="%" />
-          <SliderInput label={t('tax.taxRate')} value={realEstateTaxRate} onChange={(v) => setTax({ realEstateTaxRate: v })} min={0} max={50} step={1} unit="%" />
-          <p className="text-[10px] text-muted-foreground">{t('tax.realEstateTaxNote')}</p>
-        </div>
-
-        <div className="border-t border-border/50 pt-4 space-y-4">
-          <p className="section-title">{t('tax.crypto')}</p>
-          <SliderInput label={t('tax.grossReturnRate')} value={cryptoGrossReturn} onChange={(v) => setTax({ cryptoGrossReturn: v })} min={1} max={100} step={1} unit="%" />
-          <SliderInput label={t('tax.taxRate')} value={cryptoTaxRate} onChange={(v) => setTax({ cryptoTaxRate: v })} min={0} max={50} step={1} unit="%" />
-          <p className="text-[10px] text-muted-foreground">{t('tax.cryptoTaxNote')}</p>
-        </div>
-      </div>
-
-      <div className="space-y-6" ref={printRef}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {scenarios.map((s) => (
-            <ResultCard key={s.id}>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${s.color}20` }}>
-                  <span style={{ color: s.color }}>{s.icon}</span>
-                </div>
-                <h3 className="font-bold text-foreground text-sm">{t(`tax.${s.id}`)}</h3>
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000" ref={printRef}>
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Sidebar Inputs */}
+        <div className="lg:w-1/3 space-y-8 no-print">
+          <div className="calculator-card">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                <Receipt size={20} className="text-red-500" />
               </div>
-              <div className="space-y-2 overflow-hidden">
-                <div className="min-w-0" title={fc(s.netValue)}>
-                  <p className="text-xs text-muted-foreground">{t('tax.afterTaxValue')}</p>
-                  <p className="text-lg md:text-xl font-black stat-value truncate" style={{ color: s.color }}>{fc(s.netValue)}</p>
+              <h3 className="section-title mb-0">{t('tax.title')}</h3>
+            </div>
+
+            <div className="space-y-10">
+              <SliderInput label={t('tax.investmentAmount')} value={investmentAmount} onChange={(v) => setTax({ investmentAmount: v })} min={0} max={maxAmount(currency)} step={100000} unit={currency} />
+              <SliderInput label={t('tax.investmentYears')} value={investmentYears} onChange={(v) => setTax({ investmentYears: v })} min={1} max={30} step={1} unit={t('common.years')} />
+            </div>
+
+            <div className="mt-10 pt-10 border-t border-glass-border space-y-10">
+              <div className="space-y-8">
+                <div className="space-y-1">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-primary/80">{t('tax.etf')} (ETF / {t('tax.stocks')})</p>
+                  <SliderInput label={t('tax.grossReturnRate')} value={etfGrossReturn} onChange={(v) => setTax({ etfGrossReturn: v })} min={1} max={30} step={0.5} unit="%" />
+                  <SliderInput label={t('tax.taxRate')} value={etfTaxRate} onChange={(v) => setTax({ etfTaxRate: v })} min={0} max={50} step={1} unit="%" />
+                  <p className="text-[10px] text-muted-foreground/60 italic mt-1">{t('tax.etfTaxNote')}</p>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="min-w-0" title={fc(s.taxPaid)}>
-                    <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                      {t('tax.taxPaid')}
-                      {s.taxPaid === 0 && (
-                        <TooltipProvider delayDuration={200}>
-                          <UITooltip>
-                            <TooltipTrigger asChild>
-                              <Info size={11} className="cursor-help shrink-0" />
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-[230px] text-xs leading-snug">
-                              {exemptionInfo[s.id]}
-                            </TooltipContent>
-                          </UITooltip>
-                        </TooltipProvider>
-                      )}
-                    </p>
-                    <p className="text-xs md:text-sm font-bold text-red-500 stat-value truncate">{fc(s.taxPaid)}</p>
-                  </div>
-                  <div className="min-w-0" title={formatPercent(s.netReturn)}>
-                    <p className="text-[10px] text-muted-foreground">{t('tax.netReturn')}</p>
-                    <p className="text-xs md:text-sm font-bold text-profit stat-value truncate">{formatPercent(s.netReturn)}</p>
-                  </div>
+
+                <div className="space-y-1 border-t border-glass-border/30 pt-8">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-profit/80">{t('tax.realEstate')}</p>
+                  <SliderInput label={t('tax.grossReturnRate')} value={realEstateGrossReturn} onChange={(v) => setTax({ realEstateGrossReturn: v })} min={1} max={20} step={0.5} unit="%" />
+                  <SliderInput label={t('tax.taxRate')} value={realEstateTaxRate} onChange={(v) => setTax({ realEstateTaxRate: v })} min={0} max={50} step={1} unit="%" />
+                  <p className="text-[10px] text-muted-foreground/60 italic mt-1">{t('tax.realEstateTaxNote')}</p>
+                </div>
+
+                <div className="space-y-1 border-t border-glass-border/30 pt-8">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-orange-500/80">{t('tax.crypto')}</p>
+                  <SliderInput label={t('tax.grossReturnRate')} value={cryptoGrossReturn} onChange={(v) => setTax({ cryptoGrossReturn: v })} min={1} max={100} step={1} unit="%" />
+                  <SliderInput label={t('tax.taxRate')} value={cryptoTaxRate} onChange={(v) => setTax({ cryptoTaxRate: v })} min={0} max={50} step={1} unit="%" />
+                  <p className="text-[10px] text-muted-foreground/60 italic mt-1">{t('tax.cryptoTaxNote')}</p>
                 </div>
               </div>
-            </ResultCard>
-          ))}
-        </div>
-
-
-        <div className="calculator-card">
-          <h3 className="section-title mb-4">{t('tax.grossVsNet')}</h3>
-          <div className="h-[350px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData} barCategoryGap="20%">
-                <XAxis dataKey="name" tick={{ fontSize: 13, fontWeight: 600, fill: 'hsl(var(--foreground))' }} />
-                <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
-                <Tooltip
-                  formatter={(value: number) => fc(value)}
-                  contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', fontFamily: 'JetBrains Mono, monospace', fontSize: 13, backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}
-                />
-                <Legend />
-                <Bar dataKey="net" name={t('tax.afterTaxValue')} radius={[8, 8, 0, 0]}>
-                  {barData.map((d, i) => <Cell key={i} fill={d.color} fillOpacity={0.85} />)}
-                </Bar>
-                <Bar dataKey="tax" name={t('tax.taxPaid')} fill="#EF4444" fillOpacity={0.6} radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
-        <ExportButtons printRef={printRef} pdfData={pdfData} tabName="tax" />
+        {/* Results Area */}
+        <div className="lg:w-2/3 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {scenarios.map((s) => (
+              <ResultCard key={s.id} className="group hover:scale-[1.02] transition-transform duration-500">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-card shadow-sm border border-glass-border" style={{ color: s.color }}>
+                    {s.icon}
+                  </div>
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{t(`tax.${s.id}`)}</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">{t('tax.afterTaxValue')}</p>
+                    <p className="text-2xl font-black stat-value truncate" style={{ color: s.color }}>{fc(s.netValue)}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-glass-border/30">
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1 flex items-center gap-1">
+                        {t('tax.taxPaid')}
+                        {s.taxPaid === 0 && (
+                          <TooltipProvider delayDuration={200}>
+                            <UITooltip>
+                              <TooltipTrigger asChild>
+                                <Info size={10} className="text-profit cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-[200px] text-[10px] leading-tight glass-card p-3 rounded-xl border-glass-border">
+                                {exemptionInfo[s.id]}
+                              </TooltipContent>
+                            </UITooltip>
+                          </TooltipProvider>
+                        )}
+                      </p>
+                      <p className={`text-xs font-bold stat-value truncate ${s.taxPaid > 0 ? 'text-red-500' : 'text-profit'}`}>{fc(s.taxPaid)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">{t('tax.netReturn')}</p>
+                      <p className="text-xs font-bold text-foreground stat-value truncate text-profit">{formatPercent(s.netReturn)}</p>
+                    </div>
+                  </div>
+                </div>
+              </ResultCard>
+            ))}
+          </div>
+
+          <div className="calculator-card overflow-visible">
+            <h3 className="section-title mb-8">{t('tax.grossVsNet')}</h3>
+            <div className="h-[400px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barData} barCategoryGap="25%" margin={{ top: 10, right: 10, left: 20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 800, fill: 'hsl(var(--foreground))' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} tick={{ fontSize: 10, fontWeight: 700, fill: 'hsl(var(--muted-foreground))' }} />
+                  <Tooltip
+                    cursor={{ fill: 'hsl(var(--primary) / 0.05)', radius: 12 }}
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="glass-card p-4 rounded-2xl shadow-2xl border-glass-border">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">{label}</p>
+                            <div className="space-y-1.5">
+                              <div className="flex items-center justify-between gap-8">
+                                <span className="text-xs font-bold text-foreground/70">{t('tax.afterTaxValue')}</span>
+                                <span className="text-xs font-black stat-value" style={{ color: payload[0].payload.color }}>
+                                  {fc(payload[0].value as number)}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between gap-8">
+                                <span className="text-xs font-bold text-foreground/70">{t('tax.taxPaid')}</span>
+                                <span className="text-xs font-black stat-value text-red-500">
+                                  {fc(payload[1].value as number)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="net" name={t('tax.afterTaxValue')} radius={[10, 10, 0, 0]}>
+                    {barData.map((d, i) => <Cell key={i} fill={d.color} fillOpacity={0.9} />)}
+                  </Bar>
+                  <Bar dataKey="tax" name={t('tax.taxPaid')} fill="#EF4444" fillOpacity={0.4} radius={[10, 10, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="mt-8 flex gap-3 no-print">
+              <ExportButtons printRef={printRef} pdfData={pdfData} tabName="tax" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
